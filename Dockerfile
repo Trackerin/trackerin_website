@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Build PHP App
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Set working directory
 WORKDIR /var/www/html
