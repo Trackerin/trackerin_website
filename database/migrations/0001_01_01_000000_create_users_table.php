@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('google_id')->nullable()->comment('For Firebase/Google Auth');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable(); // Made nullable because Google Auth might not have a password initially
             $table->rememberToken();
             $table->timestamps();
         });
