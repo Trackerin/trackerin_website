@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('notes', NoteController::class);
         
         // Curriculum & Milestones (Read & Update Progress)
+        Route::post('curriculums/generate', [CurriculumController::class, 'generate'])->middleware('throttle:ai-generator');
         Route::get('curriculums', [CurriculumController::class, 'index']);
         Route::get('curriculums/{curriculum}', [CurriculumController::class, 'show']);
         Route::put('milestones/{milestone}/complete', [MilestoneController::class, 'updateProgress']);
