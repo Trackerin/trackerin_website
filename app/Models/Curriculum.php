@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 #[Fillable(['user_id', 'topic', 'description', 'total_progress', 'is_completed'])]
 class Curriculum extends Model
 {
-    //
+    protected $table = 'curriculums';
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
