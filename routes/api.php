@@ -28,5 +28,6 @@ Route::prefix('v1')->group(function () {
         Route::get('curriculums', [CurriculumController::class, 'index']);
         Route::get('curriculums/{curriculum}', [CurriculumController::class, 'show']);
         Route::put('milestones/{milestone}/complete', [MilestoneController::class, 'updateProgress']);
+        Route::post('milestones/{milestone}/generate-quiz', [MilestoneController::class, 'generateQuiz'])->middleware('throttle:ai-generator');
     });
 });
