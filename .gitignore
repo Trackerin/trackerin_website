@@ -25,4 +25,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 AGENT.md
+.agent/
+/postman/
 Trackerin_API.postman_collection.json
