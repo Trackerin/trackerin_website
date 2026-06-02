@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\TodoController;
 use App\Http\Controllers\Api\V1\NoteController;
 use App\Http\Controllers\Api\V1\CurriculumController;
 use App\Http\Controllers\Api\V1\MilestoneController;
+use App\Http\Controllers\Api\V1\ContactController;
 
 Route::prefix('v1')->group(function () {
     // Public Auth Routes
@@ -16,6 +17,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/login/google', [AuthController::class, 'googleTokenLogin']);
     Route::post('/forgot-password/send-otp', [AuthController::class, 'sendForgotPasswordOtp']);
     Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+    
+    // Public Contact Route
+    Route::post('/contact', [ContactController::class, 'store']);
 
     // Protected Auth Routes
     Route::middleware('auth:sanctum')->group(function () {

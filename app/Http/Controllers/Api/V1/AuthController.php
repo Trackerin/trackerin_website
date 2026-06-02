@@ -309,8 +309,11 @@ class AuthController extends Controller
                     ]
                 );
 
-                if (! $user->google_id) {
-                    $user->update(['google_id' => $payload['sub']]);
+                if (! $user->google_id || ! $user->email_verified_at) {
+                    $user->update([
+                        'google_id' => $user->google_id ?? $payload['sub'],
+                        'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
+                    ]);
                 }
 
                 $token = $user->createToken('auth_token')->plainTextToken;
@@ -361,8 +364,11 @@ class AuthController extends Controller
                 ]
             );
 
-            if (! $user->google_id) {
-                $user->update(['google_id' => $googleUser->getId()]);
+            if (! $user->google_id || ! $user->email_verified_at) {
+                $user->update([
+                    'google_id' => $user->google_id ?? $googleUser->getId(),
+                    'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
+                ]);
             }
 
             Auth::login($user, remember: true);
