@@ -10,9 +10,12 @@ use App\Http\Controllers\Api\V1\MilestoneController;
 
 Route::prefix('v1')->group(function () {
     // Public Auth Routes
+    Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/login/google', [AuthController::class, 'googleTokenLogin']);
+    Route::post('/forgot-password/send-otp', [AuthController::class, 'sendForgotPasswordOtp']);
+    Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
 
     // Protected Auth Routes
     Route::middleware('auth:sanctum')->group(function () {
