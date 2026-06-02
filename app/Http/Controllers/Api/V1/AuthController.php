@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserOtp;
+use App\Mail\OtpMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
     /**
-     * Register a new user.
+     * Register a new user with OTP validation.
      */
     public function register(Request $request)
     {
@@ -21,23 +27,200 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'otp' => 'required|string|size:6',
+        ], [
+            'otp.required' => 'Kode OTP wajib diisi.',
+            'otp.size' => 'Kode OTP harus terdiri dari 6 digit.',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        // Verify OTP
+        $otpRecord = UserOtp::where('email', $request->email)
+            ->where('type', 'register')
+            ->first();
+
+        if (!$otpRecord) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP tidak ditemukan. Silakan kirim ulang OTP.'],
+            ]);
+        }
+
+        if ($otpRecord->otp !== $request->otp) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP yang Anda masukkan salah.'],
+            ]);
+        }
+
+        if ($otpRecord->isExpired()) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP sudah kedaluwarsa. Silakan kirim ulang OTP.'],
+            ]);
+        }
+
+        // Complete registration inside a transaction
+        $user = DB::transaction(function () use ($request, $otpRecord) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'email_verified_at' => Carbon::now(),
+            ]);
+
+            // Delete the OTP record after successful registration
+            $otpRecord->delete();
+
+            return $user;
+        });
 
         // Create Sanctum Token
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'User successfully registered and verified',
             'data' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);
+    }
+
+    /**
+     * Send OTP for manual registration.
+     */
+    public function sendRegisterOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users',
+        ], [
+            'email.unique' => 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk.',
+        ]);
+
+        $email = $request->email;
+
+        // Generate 6 digit random OTP
+        $otp = sprintf("%06d", mt_rand(0, 999999));
+
+        // Save OTP to DB
+        UserOtp::updateOrCreate(
+            ['email' => $email, 'type' => 'register'],
+            [
+                'otp' => $otp,
+                'expires_at' => Carbon::now()->addMinutes(15),
+            ]
+        );
+
+        // Send OTP email
+        try {
+            Mail::to($email)->send(new OtpMail($otp, 'register'));
+        } catch (\Exception $e) {
+            Log::error("Failed to send OTP to {$email}: " . $e->getMessage());
+            return response()->json([
+                'message' => 'Gagal mengirimkan email OTP. Silakan periksa konfigurasi mail server Anda.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Kode OTP berhasil dikirim ke email Anda.',
+        ]);
+    }
+
+    /**
+     * Send OTP for Forgot Password.
+     */
+    public function sendForgotPasswordOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+        ], [
+            'email.exists' => 'Email ini tidak terdaftar di sistem kami.',
+        ]);
+
+        $email = $request->email;
+
+        // Generate 6 digit random OTP
+        $otp = sprintf("%06d", mt_rand(0, 999999));
+
+        // Save OTP to DB
+        UserOtp::updateOrCreate(
+            ['email' => $email, 'type' => 'forgot_password'],
+            [
+                'otp' => $otp,
+                'expires_at' => Carbon::now()->addMinutes(15),
+            ]
+        );
+
+        // Send OTP email
+        try {
+            Mail::to($email)->send(new OtpMail($otp, 'forgot_password'));
+        } catch (\Exception $e) {
+            Log::error("Failed to send Forgot Password OTP to {$email}: " . $e->getMessage());
+            return response()->json([
+                'message' => 'Gagal mengirimkan email OTP. Silakan periksa konfigurasi mail server Anda.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Kode OTP untuk atur ulang kata sandi berhasil dikirim ke email Anda.',
+        ]);
+    }
+
+    /**
+     * Reset password using OTP.
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+            'otp' => 'required|string|size:6',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.exists' => 'Email ini tidak terdaftar di sistem kami.',
+            'otp.required' => 'Kode OTP wajib diisi.',
+            'otp.size' => 'Kode OTP harus terdiri dari 6 digit.',
+            'password.min' => 'Kata sandi baru minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
+        ]);
+
+        // Verify OTP
+        $otpRecord = UserOtp::where('email', $request->email)
+            ->where('type', 'forgot_password')
+            ->first();
+
+        if (!$otpRecord) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP tidak ditemukan. Silakan kirim ulang OTP.'],
+            ]);
+        }
+
+        if ($otpRecord->otp !== $request->otp) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP yang Anda masukkan salah.'],
+            ]);
+        }
+
+        if ($otpRecord->isExpired()) {
+            throw ValidationException::withMessages([
+                'otp' => ['Kode OTP sudah kedaluwarsa. Silakan kirim ulang OTP.'],
+            ]);
+        }
+
+        // Reset password inside a transaction
+        DB::transaction(function () use ($request, $otpRecord) {
+            $user = User::where('email', $request->email)->firstOrFail();
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            // Revoke all tokens to secure the account
+            $user->tokens()->delete();
+
+            // Delete the OTP record
+            $otpRecord->delete();
+        });
+
+        return response()->json([
+            'message' => 'Kata sandi berhasil diatur ulang. Silakan masuk menggunakan kata sandi baru Anda.',
+        ]);
     }
 
     /**
@@ -122,6 +305,7 @@ class AuthController extends Controller
                         'name' => $payload['name'] ?? 'Google User',
                         'google_id' => $payload['sub'],
                         'password' => null, 
+                        'email_verified_at' => Carbon::now(),
                     ]
                 );
 
@@ -173,6 +357,7 @@ class AuthController extends Controller
                     'name' => $googleUser->getName(),
                     'google_id' => $googleUser->getId(),
                     'password' => null, 
+                    'email_verified_at' => Carbon::now(),
                 ]
             );
 
@@ -180,7 +365,7 @@ class AuthController extends Controller
                 $user->update(['google_id' => $googleUser->getId()]);
             }
 
-            Auth::login($user);
+            Auth::login($user, remember: true);
 
             return redirect()->intended('/dashboard');
 
