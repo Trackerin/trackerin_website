@@ -33,6 +33,8 @@ services:
     image: postgres:15-alpine
     container_name: trackerin_db
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${DB_DATABASE:-trackerin}
       POSTGRES_USER: ${DB_USERNAME:-trackerin_user}
