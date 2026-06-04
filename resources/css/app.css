@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,6 +7,21 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Custom Color Palette */
+    --color-main-blue: #2F6CF9;
+    --color-hover-blue: #275ACF;
+    --color-white-bg: #ECF0F1;
+    --color-white-pure: #FFFFFF;
+    --color-dark-text: #091632;
+    --color-grey-text: #6B7280;
+    --color-semi-dark: #102453;
+}
+
+body {
+    font-family: var(--font-sans);
+    /* -6% letter-spacing is equivalent to -0.06em */
+    letter-spacing: -0.06em;
 }
