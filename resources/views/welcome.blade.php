@@ -150,16 +150,16 @@
             <div class="flex flex-col items-start text-left">
                 <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI Learning
                     Assistant</span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-dark-text tracking-tight leading-tight">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-dark-text tracking-tight leading-tight reveal">
                     Rencanakan materi belajar secara <span
                         class="font-serif italic font-normal text-main-blue">cerdas</span> bersama <span
                         class="font-serif italic font-normal text-main-blue">Trackerin</span>
                 </h1>
-                <p class="mt-6 text-base md:text-lg text-grey-text max-w-xl font-medium leading-relaxed">
+                <p class="mt-6 text-base md:text-lg text-grey-text max-w-xl font-medium leading-relaxed reveal delay-100">
                     Ubah metrik belajar Anda dari centang progres manual ke sistem penguasaan materi berbasis kuis
                     evaluasi otomatis yang divalidasi oleh kecerdasan buatan.
                 </p>
-                <div class="mt-8 flex flex-wrap gap-4">
+                <div class="mt-8 flex flex-wrap gap-4 reveal delay-200">
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
                             class="inline-flex items-center space-x-2 px-6 py-3.5 rounded-full text-sm font-semibold tracking-tight text-white-pure bg-dark-text hover:bg-main-blue transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group">
@@ -175,7 +175,7 @@
             </div>
 
             <!-- Right Side: Clean Mockup Image with Rounded Corner -->
-            <div class="w-full">
+            <div class="w-full reveal-right delay-200">
                 <img src="{{ Vite::asset('resources/images/placeholder_image.jpg') }}"
                     alt="Trackerin Dashboard Illustration"
                     class="w-full h-auto object-cover rounded-[2rem] shadow-sm border border-dark-text/5">
@@ -185,7 +185,7 @@
         <!-- Features Bento Grid Section -->
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="features">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
-                <div class="text-left mb-16">
+                <div class="text-left mb-16 reveal">
                     <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Fitur Unggulan</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text mt-4">
                         Fitur <span class="font-serif italic font-normal text-main-blue">cerdas</span> terintegrasi
@@ -201,7 +201,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Bento Card 1: AI Curriculum (Span 2 Columns on Desktop) -->
                     <div
-                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between reveal hover-glow-card">
                         <div class="flex flex-col md:flex-row justify-between gap-8">
                             <div class="max-w-md">
                                 <div
@@ -246,7 +246,7 @@
 
                     <!-- Bento Card 2: Knowledge Quiz (Span 1 Column) -->
                     <div
-                        class="gradient-border-card p-8 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+                        class="gradient-border-card p-8 flex flex-col justify-between reveal delay-100 hover-glow-card">
                         <div>
                             <div
                                 class="w-12 h-12 bg-white-bg rounded-xl flex items-center justify-center mb-6 border border-dark-text/5 text-main-blue">
@@ -273,7 +273,7 @@
 
                     <!-- Bento Card 3: Smart Search (Span 1 Column) -->
                     <div
-                        class="gradient-border-card p-8 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+                        class="gradient-border-card p-8 flex flex-col justify-between reveal delay-200 hover-glow-card">
                         <div>
                             <div
                                 class="w-12 h-12 bg-white-bg rounded-xl flex items-center justify-center mb-6 border border-dark-text/5 text-main-blue">
@@ -299,7 +299,7 @@
 
                     <!-- Bento Card 4: Progress Tracker (Span 2 Columns on Desktop) -->
                     <div
-                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between reveal delay-300 hover-glow-card">
                         <div class="flex flex-col md:flex-row justify-between gap-8">
                             <div class="max-w-md">
                                 <div
@@ -344,7 +344,7 @@
         <section class="py-24 border-t border-dark-text/5" id="why-us">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Big Typography Info -->
-                <div class="lg:col-span-5 flex flex-col items-start">
+                <div class="lg:col-span-5 flex flex-col items-start reveal">
                     <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">Mengapa
                         Trackerin</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
@@ -359,7 +359,7 @@
 
                 <!-- Right: Comparison list -->
                 <div class="lg:col-span-7 flex flex-col space-y-6">
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start">
+                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-100 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             1</div>
@@ -372,7 +372,7 @@
                         </div>
                     </div>
 
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start">
+                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-200 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             2</div>
@@ -385,7 +385,7 @@
                         </div>
                     </div>
 
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start">
+                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-300 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             3</div>
@@ -404,7 +404,7 @@
         <!-- Testimonials Section -->
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="testimonials">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="text-center max-w-3xl mx-auto mb-16 reveal">
                     <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Testimoni</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text mt-4">
                         Apa kata <span class="font-serif italic font-normal text-main-blue">mereka</span> tentang <span
@@ -417,7 +417,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Testimonial 1 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between">
+                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Sebelum memakai Trackerin, saya sering kebingungan membuat kurikulum belajar coding.
                             Sekarang saya tinggal ketik topik dan silabus belajar langsung jadi!"
@@ -434,7 +434,7 @@
                     </div>
 
                     <!-- Testimonial 2 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between">
+                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal delay-100 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Kuis otomatis di akhir milestone sangat berguna untuk memastikan saya benar-benar memahami
                             topik, bukan cuma asal mencentang kotak selesai."
@@ -451,7 +451,7 @@
                     </div>
 
                     <!-- Testimonial 3 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between">
+                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal delay-200 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Fitur to-dos dan catatan per materi sangat terorganisasi dengan rapi. Sangat membantu saya
                             lulus ujian beasiswa secara mandiri."
@@ -474,7 +474,7 @@
         <section class="py-24 border-t border-dark-text/5" id="download">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
                 <div
-                    class="bg-dark-text text-white-pure rounded-3xl p-8 md:p-16 flex flex-col lg:flex-row items-center justify-between gap-12">
+                    class="bg-dark-text text-white-pure rounded-3xl p-8 md:p-16 flex flex-col lg:flex-row items-center justify-between gap-12 reveal-scale">
                     <div class="max-w-xl text-left">
                         <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Akses Dimana
                             Saja</span>
@@ -508,7 +508,7 @@
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="contact">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                 <!-- Left Column: Details -->
-                <div class="lg:col-span-5 flex flex-col items-start text-left">
+                <div class="lg:col-span-5 flex flex-col items-start text-left reveal">
                     <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">Hubungi Kami</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
                         Ada pertanyaan? <br>Mari <span class="font-serif italic font-normal text-main-blue">berdiskusi</span> bersama kami
@@ -547,7 +547,7 @@
 
                 <!-- Right Column: Premium Form Card -->
                 <div class="lg:col-span-7 w-full">
-                    <div class="gradient-border-card p-8 md:p-10 shadow-sm border border-dark-text/5">
+                    <div class="gradient-border-card p-8 md:p-10 shadow-sm border border-dark-text/5 reveal delay-100">
                         <form id="contact-form" class="space-y-5">
                             @csrf
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
