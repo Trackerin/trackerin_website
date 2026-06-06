@@ -23,7 +23,7 @@
     <!-- Main Container -->
     <div class="relative z-10 w-full max-w-2xl px-4 py-12 text-center">
         <!-- Premium Card -->
-        <div class="gradient-border-card p-8 md:p-12 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5 flex flex-col items-center">
+        <div class="gradient-border-card p-6 sm:p-8 md:p-12 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5 flex flex-col items-center">
             
             <!-- Icon -->
             <div class="w-16 h-16 bg-main-blue/10 text-main-blue rounded-full flex items-center justify-center mb-6">
@@ -42,7 +42,7 @@
             </p>
 
             <!-- User details list -->
-            <div class="w-full bg-white-bg/60 border border-dark-text/5 rounded-2xl p-6 text-left mb-8 space-y-3">
+            <div class="w-full bg-white-bg/60 border border-dark-text/5 rounded-2xl p-4 sm:p-6 text-left mb-8 space-y-3">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-bold uppercase tracking-wider text-grey-text">Nama Lengkap</span>
                     <span class="font-bold text-dark-text">{{ Auth::user()->name }}</span>
