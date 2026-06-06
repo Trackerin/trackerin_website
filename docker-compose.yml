@@ -19,8 +19,9 @@ services:
       dockerfile: Dockerfile
     container_name: trackerin_app
     restart: unless-stopped
+    command: sh -c "cp -rp /var/www/html/public/. /var/www/html/shared/ && chown -R www-data:www-data /var/www/html/shared && php-fpm"
     volumes:
-      - public_data:/var/www/html/public
+      - public_data:/var/www/html/shared
       - storage_data:/var/www/html/storage
       - ./.env:/var/www/html/.env
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
