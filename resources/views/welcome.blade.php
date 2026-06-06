@@ -154,16 +154,14 @@
                 class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-20 sm:py-28 md:py-36 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-screen">
             <!-- Left Side: Custom Font Pairing Content -->
             <div class="flex flex-col items-start text-left">
-                <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI Learning
-                    Assistant</span>
+                <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI STUDY COMPANION</span>
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-dark-text tracking-tight leading-tight reveal">
-                    Rencanakan materi belajar secara <span
+                    Susun target dan belajar lebih <span
                         class="font-serif italic font-normal text-main-blue">cerdas</span> bersama <span
                         class="font-serif italic font-normal text-main-blue">Trackerin</span>
                 </h1>
                 <p class="mt-6 text-base md:text-lg text-grey-text max-w-xl font-medium leading-relaxed reveal delay-100">
-                    Ubah metrik belajar Anda dari centang progres manual ke sistem penguasaan materi berbasis kuis
-                    evaluasi otomatis yang divalidasi oleh kecerdasan buatan.
+                    Rencanakan materi, pantau progres, dan uji pemahamanmu di satu tempat! Trackerin hadir untuk memastikan kamu benar-benar paham dan bikin waktu belajarmu jadi lebih efisien.
                 </p>
                 <div class="mt-8 flex flex-wrap gap-4 reveal delay-200">
                     @if (Route::has('register'))
@@ -195,12 +193,11 @@
                 <div class="text-left mb-16 reveal">
                     <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Fitur Unggulan</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text mt-4">
-                        Fitur <span class="font-serif italic font-normal text-main-blue">cerdas</span> terintegrasi
+                        Belajar lebih <span class="font-serif italic font-normal text-main-blue">terarah</span> dengan integrasi
                         <span class="font-serif italic font-normal text-main-blue">AI</span>
                     </h2>
                     <p class="text-grey-text mt-3 text-sm md:text-base font-medium max-w-xl leading-relaxed">
-                        Trackerin mengintegrasikan kecerdasan buatan untuk merancang, memantau, dan menguji pemahaman
-                        belajar Anda dalam satu antarmuka yang bersih.
+                        Satu aplikasi untuk semua kebutuhan belajarmu. Mulai dari merancang materi belajar, memantau progres, mengetes pemahaman dengan kuis, semuanya bisa dilakukan disini. Trackerin siap memandu proses belajarmu agar lebih efektif!
                     </p>
                 </div>
 
@@ -219,9 +216,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-dark-text mb-3">AI Curriculum Generator</h3>
                                 <p class="text-grey-text text-sm font-medium leading-relaxed">
-                                    Cukup masukkan topik belajar yang Anda minati. AI kami akan memecah materi tersebut
-                                    menjadi rangkaian silabus terstruktur lengkap dengan milestones pembelajaran secara
-                                    instan.
+                                    Mulai belajar topik apa saja tanpa pusing menyusun materi. Cukup ketik subjek yang pengen kamu kuasai, dan AI bakal otomatis buat roadmap terstruktur lengkap dengan tahapan belajarnya!
                                 </p>
                             </div>
 
@@ -232,7 +227,7 @@
                                     Roadmap</span>
                                 <div
                                     class="bg-white-pure p-3 rounded-lg border border-dark-text/5 flex items-center justify-between">
-                                    <span class="text-xs font-bold text-dark-text">1. Fundamental Syntax</span>
+                                    <span class="text-xs font-bold text-dark-text">1. Fundamental PHP</span>
                                     <span
                                         class="w-4 h-4 rounded-full bg-main-blue/20 flex items-center justify-center"><span
                                             class="w-1.5 h-1.5 rounded-full bg-main-blue"></span></span>
@@ -266,8 +261,7 @@
                             </div>
                             <h3 class="text-xl font-bold text-dark-text mb-3">Knowledge Quiz</h3>
                             <p class="text-grey-text text-sm font-medium leading-relaxed">
-                                Buktikan pemahaman Anda! Materi hanya akan ditandai sebagai dikuasai (*Mastered*) jika
-                                Anda lulus kuis singkat yang dirancang otomatis di setiap akhir milestone.
+                                Uji sejauh mana pemahamanmu lewat kuis! Materi akan ditandai selesai kalau kamu berhasil lulus kuis di setiap akhir tahapan belajar.
                             </p>
                         </div>
                         <div
@@ -291,8 +285,7 @@
                             </div>
                             <h3 class="text-xl font-bold text-dark-text mb-3">Smart Search</h3>
                             <p class="text-grey-text text-sm font-medium leading-relaxed">
-                                Temukan materi, istilah, atau topik belajar secara relevan menggunakan pencarian
-                                berbasis konteks kalimat, bukan sekadar pencarian kata kunci yang kaku.
+                                Cari apa pun jadi lebih gampang. Ketik topik belajarmu pakai kalimat biasa, dan sistem bakal langsung paham konteks yang kamu maksud!
                             </p>
                         </div>
                         <div
@@ -317,6 +310,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-dark-text mb-3">Progress Tracker</h3>
                                 <p class="text-grey-text text-sm font-medium leading-relaxed">
+                                    Pantau semua perkembangan belajarmu lewat grafik! Cek persentase progresmu tiap minggu biar kamu tahu sejauh mana target belajarmu tercapai!
                                     Pantau grafik statistik belajar Anda, catat catatan penting per materi, serta susun
                                     daftar tugas harian Anda secara terintegrasi untuk menjaga konsistensi belajar.
                                 </p>
