@@ -101,47 +101,46 @@
                 <span class="w-4 h-[1.5px] bg-dark-text rounded-full transition-all duration-300 group-hover:w-6"
                     id="burger-bottom"></span>
             </button>
-        </div>
-
-        <!-- Mobile Drawer Menu (Backdrop Blur & Smooth Slide) -->
-        <div class="fixed inset-0 bg-white-bg/95 backdrop-blur-xl z-40 transform translate-x-full transition-transform duration-500 ease-in-out md:hidden flex flex-col justify-between p-8 pt-32"
-            id="mobile-menu">
-            <nav class="flex flex-col space-y-6">
-                <a href="#features"
-                    class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Features</a>
-                <a href="#why-us"
-                    class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Why
-                    Us</a>
-                <a href="#testimonials"
-                    class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Testimonials</a>
-                <a href="#download"
-                    class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Get
-                    App</a>
-            </nav>
-
-            <div class="flex flex-col space-y-4">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="w-full text-center py-4 rounded-full text-base font-semibold bg-dark-text text-white-pure hover:bg-main-blue transition-all duration-300">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="w-full text-center py-4 rounded-full text-base font-semibold text-dark-text border border-dark-text/25 hover:border-dark-text transition-all duration-200 mb-2">
-                            Sign In
-                        </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="w-full text-center py-4 rounded-full text-base font-semibold bg-dark-text text-white-pure hover:bg-main-blue transition-all duration-300">
-                                Get Started
-                            </a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
-        </div>
     </header>
+
+    <!-- Mobile Drawer Menu (Backdrop Blur & Smooth Slide) -->
+    <div class="fixed inset-0 bg-white-pure/95 backdrop-blur-xl z-40 transform translate-x-full transition-transform duration-500 ease-in-out md:hidden flex flex-col justify-between p-8 pt-32"
+        id="mobile-menu">
+        <nav class="flex flex-col space-y-6">
+            <a href="#features"
+                class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Features</a>
+            <a href="#why-us"
+                class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Why
+                Us</a>
+            <a href="#testimonials"
+                class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Testimonials</a>
+            <a href="#download"
+                class="mobile-nav-link text-3xl font-bold tracking-tight text-dark-text hover:text-main-blue transition-colors duration-200">Get
+                App</a>
+        </nav>
+
+        <div class="flex flex-col space-y-4">
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ url('/dashboard') }}"
+                        class="w-full text-center py-4 rounded-full text-base font-semibold bg-dark-text text-white-pure hover:bg-main-blue transition-all duration-300">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="w-full text-center py-4 rounded-full text-base font-semibold text-dark-text border border-dark-text/25 hover:border-dark-text transition-all duration-200 mb-2">
+                        Sign In
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                            class="w-full text-center py-4 rounded-full text-base font-semibold bg-dark-text text-white-pure hover:bg-main-blue transition-all duration-300">
+                            Get Started
+                        </a>
+                    @endif
+                @endauth
+            @endif
+        </div>
+    </div>
 
     <!-- Main Container -->
     <main class="pt-0">
@@ -152,7 +151,7 @@
 
             <!-- Hero Section: Left Text, Right Mockup Layout -->
             <section
-                class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-28 md:py-36 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-screen">
+                class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-20 sm:py-28 md:py-36 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-screen">
             <!-- Left Side: Custom Font Pairing Content -->
             <div class="flex flex-col items-start text-left">
                 <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI Learning
@@ -209,7 +208,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Bento Card 1: AI Curriculum (Span 2 Columns on Desktop) -->
                     <div
-                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between reveal hover-glow-card">
+                        class="gradient-border-card p-6 sm:p-8 lg:col-span-2 flex flex-col justify-between reveal hover-glow-card">
                         <div class="flex flex-col md:flex-row justify-between gap-8">
                             <div class="max-w-md">
                                 <div
@@ -254,7 +253,7 @@
 
                     <!-- Bento Card 2: Knowledge Quiz (Span 1 Column) -->
                     <div
-                        class="gradient-border-card p-8 flex flex-col justify-between reveal delay-100 hover-glow-card">
+                        class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-100 hover-glow-card">
                         <div>
                             <div
                                 class="w-12 h-12 bg-white-bg rounded-xl flex items-center justify-center mb-6 border border-dark-text/5 text-main-blue">
@@ -281,7 +280,7 @@
 
                     <!-- Bento Card 3: Smart Search (Span 1 Column) -->
                     <div
-                        class="gradient-border-card p-8 flex flex-col justify-between reveal delay-200 hover-glow-card">
+                        class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-200 hover-glow-card">
                         <div>
                             <div
                                 class="w-12 h-12 bg-white-bg rounded-xl flex items-center justify-center mb-6 border border-dark-text/5 text-main-blue">
@@ -307,7 +306,7 @@
 
                     <!-- Bento Card 4: Progress Tracker (Span 2 Columns on Desktop) -->
                     <div
-                        class="gradient-border-card p-8 lg:col-span-2 flex flex-col justify-between reveal delay-300 hover-glow-card">
+                        class="gradient-border-card p-6 sm:p-8 lg:col-span-2 flex flex-col justify-between reveal delay-300 hover-glow-card">
                         <div class="flex flex-col md:flex-row justify-between gap-8">
                             <div class="max-w-md">
                                 <div
@@ -367,7 +366,7 @@
 
                 <!-- Right: Comparison list -->
                 <div class="lg:col-span-7 flex flex-col space-y-6">
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-100 hover-lift">
+                    <div class="gradient-border-card p-5 sm:p-6 flex space-x-4 sm:space-x-6 items-start reveal delay-100 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             1</div>
@@ -380,7 +379,7 @@
                         </div>
                     </div>
 
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-200 hover-lift">
+                    <div class="gradient-border-card p-5 sm:p-6 flex space-x-4 sm:space-x-6 items-start reveal delay-200 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             2</div>
@@ -393,7 +392,7 @@
                         </div>
                     </div>
 
-                    <div class="gradient-border-card p-6 flex space-x-6 items-start reveal delay-300 hover-lift">
+                    <div class="gradient-border-card p-5 sm:p-6 flex space-x-4 sm:space-x-6 items-start reveal delay-300 hover-lift">
                         <div
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             3</div>
@@ -425,7 +424,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Testimonial 1 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal hover-lift">
+                    <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Sebelum memakai Trackerin, saya sering kebingungan membuat kurikulum belajar coding.
                             Sekarang saya tinggal ketik topik dan silabus belajar langsung jadi!"
@@ -442,7 +441,7 @@
                     </div>
 
                     <!-- Testimonial 2 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal delay-100 hover-lift">
+                    <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-100 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Kuis otomatis di akhir milestone sangat berguna untuk memastikan saya benar-benar memahami
                             topik, bukan cuma asal mencentang kotak selesai."
@@ -459,7 +458,7 @@
                     </div>
 
                     <!-- Testimonial 3 -->
-                    <div class="gradient-border-card p-8 flex flex-col justify-between reveal delay-200 hover-lift">
+                    <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-200 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             "Fitur to-dos dan catatan per materi sangat terorganisasi dengan rapi. Sangat membantu saya
                             lulus ujian beasiswa secara mandiri."
@@ -482,7 +481,7 @@
         <section class="py-24 border-t border-dark-text/5" id="download">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
                 <div
-                    class="bg-dark-text text-white-pure rounded-3xl p-8 md:p-16 flex flex-col lg:flex-row items-center justify-between gap-12 reveal-scale">
+                    class="bg-dark-text text-white-pure rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-12 reveal-scale">
                     <div class="max-w-xl text-left">
                         <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Akses Dimana
                             Saja</span>
@@ -555,7 +554,7 @@
 
                 <!-- Right Column: Premium Form Card -->
                 <div class="lg:col-span-7 w-full">
-                    <div class="gradient-border-card p-8 md:p-10 shadow-sm border border-dark-text/5 reveal delay-100">
+                    <div class="gradient-border-card p-6 sm:p-8 md:p-10 shadow-sm border border-dark-text/5 reveal delay-100">
                         <form id="contact-form" class="space-y-5">
                             @csrf
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

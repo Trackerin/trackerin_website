@@ -31,7 +31,7 @@
         </a>
 
         <!-- Premium Auth Card -->
-        <div class="gradient-border-card p-8 md:p-10 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5">
+        <div class="gradient-border-card p-6 sm:p-8 md:p-10 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5">
             <!-- Brand Logo & Header -->
             <div class="text-left mb-8">
                 <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-7 w-auto mb-6">
