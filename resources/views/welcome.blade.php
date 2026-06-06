@@ -18,11 +18,11 @@
 
 <body
     class="bg-white-bg text-dark-text min-h-screen font-sans selection:bg-main-blue selection:text-white-pure antialiased overflow-x-hidden">
-    <!-- Premium Header & Navbar (Creative Studio Style) -->
+    <!-- Premium Header & Navbar (Creative Studio Style - Floating) -->
     <header
-        class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent border-b border-dark-text/5"
+        class="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[90rem] z-50 transition-all duration-300 bg-white-pure/80 backdrop-blur-md border border-dark-text/5 shadow-sm rounded-full"
         id="main-header">
-        <div class="max-w-[98rem] mx-auto px-4 md:px-6 h-24 flex items-center justify-between transition-all duration-500"
+        <div class="w-full px-6 md:px-10 h-14 md:h-16 flex items-center justify-between transition-all duration-300"
             id="header-inner">
             <!-- Logo -->
             <a href="/"
@@ -142,10 +142,15 @@
     </header>
 
     <!-- Main Container -->
-    <main class="pt-24">
-        <!-- Hero Section: Left Text, Right Mockup Layout -->
-        <section
-            class="max-w-[98rem] mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[80vh]">
+    <main class="pt-0">
+        <!-- Hero Section Wrapper with Aurora Background -->
+        <div class="relative w-full overflow-hidden bg-white-bg">
+            <!-- Aurora Premium Glow Background -->
+            <div class="aurora-hero-bg"></div>
+
+            <!-- Hero Section: Left Text, Right Mockup Layout -->
+            <section
+                class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[80vh]">
             <!-- Left Side: Custom Font Pairing Content -->
             <div class="flex flex-col items-start text-left">
                 <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI Learning
@@ -181,6 +186,7 @@
                     class="w-full h-auto object-cover rounded-[2rem] shadow-sm border border-dark-text/5">
             </div>
         </section>
+        </div>
 
         <!-- Features Bento Grid Section -->
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="features">
@@ -663,18 +669,14 @@
         const burgerBottom = document.getElementById('burger-bottom');
         const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-        // Scroll listener to toggle glassmorphism and height transition
+        // Scroll listener to toggle floating glassmorphism shadow
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                header.classList.add('bg-white-bg/90', 'backdrop-blur-lg', 'border-dark-text/10');
-                header.classList.remove('border-dark-text/5');
-                headerInner.classList.remove('h-24');
-                headerInner.classList.add('h-16');
+                header.classList.add('bg-white-pure/90', 'shadow-md');
+                header.classList.remove('bg-white-pure/80', 'shadow-sm');
             } else {
-                header.classList.remove('bg-white-bg/90', 'backdrop-blur-lg', 'border-dark-text/10');
-                header.classList.add('border-dark-text/5');
-                headerInner.classList.remove('h-16');
-                headerInner.classList.add('h-24');
+                header.classList.add('bg-white-pure/80', 'shadow-sm');
+                header.classList.remove('bg-white-pure/90', 'shadow-md');
             }
         });
 
