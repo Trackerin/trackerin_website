@@ -27,7 +27,7 @@
             <!-- Logo -->
             <a href="/"
                 class="flex items-center focus:outline-none hover:opacity-80 transition-opacity duration-300">
-                <img src="{{ Vite::asset('resources/images/trackerin_logo.svg') }}" alt="Trackerin Logo"
+                <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo"
                     class="h-8 w-auto">
             </a>
 
@@ -181,7 +181,7 @@
 
             <!-- Right Side: Clean Mockup Image with Rounded Corner -->
             <div class="w-full reveal-right delay-200">
-                <img src="{{ Vite::asset('resources/images/placeholder_image.jpg') }}"
+                <img src="{{ asset('images/placeholder_image.jpg') }}"
                     alt="Trackerin Dashboard Illustration"
                     class="w-full h-auto object-cover rounded-[2rem] shadow-sm border border-dark-text/5">
             </div>
@@ -272,7 +272,7 @@
                         <div
                             class="mt-8 pt-4 border-t border-dark-text/5 flex justify-between items-center text-xs font-bold text-main-blue">
                             <span>Verification-based system</span>
-                            <img src="{{ Vite::asset('resources/images/arrow_right_icon.svg') }}" alt="Arrow"
+                            <img src="{{ asset('images/arrow_right_icon.svg') }}" alt="Arrow"
                                 class="w-4 h-4">
                         </div>
                     </div>
@@ -298,7 +298,7 @@
                             class="mt-8 w-full bg-white-bg rounded-xl p-2.5 border border-dark-text/5 flex items-center justify-between">
                             <span class="text-[10px] text-grey-text">"Belajar framework MVC..."</span>
                             <span class="w-6 h-6 bg-main-blue rounded-lg flex items-center justify-center"><img
-                                    src="{{ Vite::asset('resources/images/search_icon.svg') }}" alt="Search"
+                                    src="{{ asset('images/search_icon.svg') }}" alt="Search"
                                     class="w-3.5 h-3.5 filter invert"></span>
                         </div>
                     </div>
@@ -502,7 +502,7 @@
                         <a href="#"
                             class="w-full sm:w-auto text-center px-8 py-4 bg-white-pure text-dark-text font-semibold rounded-full border border-white-pure transition-all duration-300 hover:bg-[#ECF0F1] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2">
                             <span>Get Mobile App</span>
-                            <img src="{{ Vite::asset('resources/images/arrow_right_icon.svg') }}" alt="Arrow"
+                            <img src="{{ asset('images/arrow_right_icon.svg') }}" alt="Arrow"
                                 class="w-4 h-4">
                         </a>
                     </div>
@@ -603,7 +603,7 @@
             <!-- Column 1: Brand details -->
             <div class="flex flex-col space-y-6">
                 <a href="/" class="flex items-center focus:outline-none hover:opacity-80 transition-opacity duration-300">
-                    <img src="{{ Vite::asset('resources/images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-8 w-auto">
+                    <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-8 w-auto">
                 </a>
                 <p class="text-sm text-gray-400 max-w-xs leading-relaxed font-medium">
                     Platform pemantau belajar berbasis kecerdasan buatan untuk membantu Anda merancang kurikulum dan menguasai materi secara terarah.
