@@ -17,19 +17,21 @@
 </head>
 
 <body
-    class="bg-white-bg text-dark-text min-h-screen font-sans selection:bg-main-blue selection:text-white-pure antialiased overflow-x-hidden">
+    class="bg-white-pure text-dark-text min-h-screen font-sans selection:bg-main-blue selection:text-white-pure antialiased overflow-x-hidden">
     <!-- Premium Header & Navbar (Creative Studio Style - Floating) -->
     <header
-        class="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[90rem] z-50 transition-all duration-300 bg-white-pure/80 backdrop-blur-md border border-dark-text/5 shadow-sm rounded-full"
+        class="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[90rem] z-50 transition-all duration-300 bg-white-pure/75 backdrop-blur-md border border-dark-text/8 rounded-full"
         id="main-header">
         <div class="w-full px-6 md:px-10 h-14 md:h-16 flex items-center justify-between transition-all duration-300"
             id="header-inner">
             <!-- Logo -->
-            <a href="/"
-                class="flex items-center focus:outline-none hover:opacity-80 transition-opacity duration-300">
-                <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo"
-                    class="h-8 w-auto">
-            </a>
+            <div class="flex-1 flex justify-start">
+                <a href="/"
+                    class="flex items-center focus:outline-none hover:opacity-80 transition-opacity duration-300">
+                    <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo"
+                        class="h-8 w-auto">
+                </a>
+            </div>
 
             <!-- Desktop Navigation Links (Minimalist Studio style) -->
             <nav class="hidden md:flex items-center space-x-10">
@@ -60,7 +62,7 @@
             </nav>
 
             <!-- Desktop Action Buttons -->
-            <div class="hidden md:flex items-center space-x-4">
+            <div class="hidden md:flex items-center justify-end space-x-4 flex-1">
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}"
@@ -144,13 +146,13 @@
     <!-- Main Container -->
     <main class="pt-0">
         <!-- Hero Section Wrapper with Aurora Background -->
-        <div class="relative w-full overflow-hidden bg-white-bg">
+        <div class="relative w-full overflow-hidden bg-white-pure">
             <!-- Aurora Premium Glow Background -->
             <div class="aurora-hero-bg"></div>
 
             <!-- Hero Section: Left Text, Right Mockup Layout -->
             <section
-                class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[80vh]">
+                class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-28 md:py-36 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-screen">
             <!-- Left Side: Custom Font Pairing Content -->
             <div class="flex flex-col items-start text-left">
                 <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI Learning
@@ -179,11 +181,11 @@
                 </div>
             </div>
 
-            <!-- Right Side: Clean Mockup Image with Rounded Corner -->
-            <div class="w-full reveal-right delay-200">
-                <img src="{{ asset('images/placeholder_image.jpg') }}"
-                    alt="Trackerin Dashboard Illustration"
-                    class="w-full h-auto object-cover rounded-[2rem] shadow-sm border border-dark-text/5">
+            <!-- Right Side: Clean Mobile Mockup Image (Enlarged) -->
+            <div class="w-full reveal-right delay-200 flex justify-center">
+                <img src="{{ asset('images/mockup-mobile.png') }}"
+                    alt="Trackerin Mobile Mockup"
+                    class="w-full max-w-[380px] md:max-w-[440px] lg:max-w-[480px] h-auto object-contain">
             </div>
         </section>
         </div>
@@ -669,14 +671,14 @@
         const burgerBottom = document.getElementById('burger-bottom');
         const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-        // Scroll listener to toggle floating glassmorphism shadow
+        // Scroll listener to toggle floating stroke outline contrast
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                header.classList.add('bg-white-pure/90', 'shadow-md');
-                header.classList.remove('bg-white-pure/80', 'shadow-sm');
+                header.classList.add('bg-white-pure/90', 'border-dark-text/15');
+                header.classList.remove('bg-white-pure/75', 'border-dark-text/8');
             } else {
-                header.classList.add('bg-white-pure/80', 'shadow-sm');
-                header.classList.remove('bg-white-pure/90', 'shadow-md');
+                header.classList.add('bg-white-pure/75', 'border-dark-text/8');
+                header.classList.remove('bg-white-pure/90', 'border-dark-text/15');
             }
         });
 
