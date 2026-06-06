@@ -34,7 +34,7 @@
         <div class="gradient-border-card p-8 md:p-10 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5">
             <!-- Brand Logo & Header -->
             <div class="text-left mb-8">
-                <img src="{{ Vite::asset('resources/images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-7 w-auto mb-6">
+                <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-7 w-auto mb-6">
                 <h1 class="text-2xl font-bold tracking-tight text-dark-text letter-tracking">
                     Selamat datang <span class="font-serif italic font-normal text-main-blue">kembali</span>
                 </h1>
