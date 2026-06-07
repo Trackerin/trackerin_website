@@ -38,7 +38,7 @@
             </h1>
             
             <p class="text-grey-text text-sm font-medium max-w-md mb-8">
-                Selamat datang di Trackerin. Sesi Anda telah tersimpan dengan aman di sistem. Halaman dashboard utama dengan bento grid akan diimplementasikan pada tahap selanjutnya.
+                Selamat datang kembali di Trackerin! Autentikasi berhasil dan akunmu sudah siap digunakan. Yuk, langsung masuk ke dashboard dan lanjutkan target belajarmu hari ini!
             </p>
 
             <!-- User details list -->
@@ -48,13 +48,13 @@
                     <span class="font-bold text-dark-text">{{ Auth::user()->name }}</span>
                 </div>
                 <div class="flex justify-between items-center text-xs border-t border-dark-text/5 pt-3">
-                    <span class="font-bold uppercase tracking-wider text-grey-text">Alamat Email</span>
+                    <span class="font-bold uppercase tracking-wider text-grey-text">Email</span>
                     <span class="font-bold text-dark-text">{{ Auth::user()->email }}</span>
                 </div>
                 <div class="flex justify-between items-center text-xs border-t border-dark-text/5 pt-3">
                     <span class="font-bold uppercase tracking-wider text-grey-text">Status Akun</span>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
-                        Aktif (Terotentikasi)
+                        Aktif
                     </span>
                 </div>
             </div>
@@ -62,14 +62,14 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
                 <a href="/" class="px-8 py-3.5 rounded-full border border-dark-text/10 bg-white-pure hover:bg-white-bg text-dark-text font-bold text-sm transition-all duration-300 active:scale-[0.98]">
-                    Kembali ke Beranda
+                    Kembali ke Dashboard
                 </a>
                 
                 <!-- Logout Form -->
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-dark-text hover:bg-red-600 active:scale-[0.98] transition-all duration-300 text-sm font-bold text-white-pure">
-                        Keluar (Logout)
+                        Logout
                     </button>
                 </form>
             </div>
