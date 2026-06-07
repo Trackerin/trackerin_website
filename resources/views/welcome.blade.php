@@ -311,8 +311,6 @@
                                 <h3 class="text-xl font-bold text-dark-text mb-3">Progress Tracker</h3>
                                 <p class="text-grey-text text-sm font-medium leading-relaxed">
                                     Pantau semua perkembangan belajarmu lewat grafik! Cek persentase progresmu tiap minggu biar kamu tahu sejauh mana target belajarmu tercapai!
-                                    Pantau grafik statistik belajar Anda, catat catatan penting per materi, serta susun
-                                    daftar tugas harian Anda secara terintegrasi untuk menjaga konsistensi belajar.
                                 </p>
                             </div>
 
@@ -346,15 +344,15 @@
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Big Typography Info -->
                 <div class="lg:col-span-5 flex flex-col items-start reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">Mengapa
-                        Trackerin</span>
+                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">
+                        Mengapa Trackerin
+                    </span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
-                        Sistem belajar <span class="font-serif italic font-normal text-main-blue">tanpa</span>
-                        kerumitan <span class="font-serif italic font-normal text-main-blue">manual</span>
+                        Belajar mandiri <span class="font-serif italic font-normal text-main-blue">tanpa</span>
+                        ribet susun <span class="font-serif italic font-normal text-main-blue">materi</span>
                     </h2>
                     <p class="text-grey-text mt-6 font-medium leading-relaxed">
-                        Kami percaya belajar mandiri tidak harus membingungkan. Trackerin membuang kerumitan perencanaan
-                        kurikulum sehingga Anda bisa fokus pada pemahaman materi.
+                        Kami percaya belajar hal baru itu gak harus bikin pusing. Trackerin bakal siapin target dan susunan materi biar kamu langsung fokus belajar!
                     </p>
                 </div>
 
@@ -365,10 +363,9 @@
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             1</div>
                         <div>
-                            <h3 class="text-lg font-bold text-dark-text">Otomatisasi Kurikulum</h3>
+                            <h3 class="text-lg font-bold text-dark-text">Susun Materi Otomatis</h3>
                             <p class="text-grey-text text-sm mt-2 font-medium leading-relaxed">
-                                Berhenti menghabiskan waktu mencari modul belajar di Google. AI menyusun rencana studi
-                                terarah dalam hitungan detik.
+                                Tidak perlu buang waktu berjam-jam cari bahan belajar di internet. Cukup ketik topiknya dan Trackerin bakal langsung buatin susunan materi buat kamu!
                             </p>
                         </div>
                     </div>
@@ -378,10 +375,9 @@
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             2</div>
                         <div>
-                            <h3 class="text-lg font-bold text-dark-text">Validasi Penguasaan Nyata</h3>
+                            <h3 class="text-lg font-bold text-dark-text">Progres yang Valid</h3>
                             <p class="text-grey-text text-sm mt-2 font-medium leading-relaxed">
-                                Tidak ada lagi tanda centang palsu. Sistem menandai materi selesai hanya setelah Anda
-                                lulus uji kuis AI.
+                                Say goodbye sama asal centang selesai padahal belum paham! Di Trackerin, materi akan ditandai selesai setelah kamu berhasil mengerjakan kuis evaluasi!
                             </p>
                         </div>
                     </div>
@@ -391,10 +387,9 @@
                             class="w-10 h-10 bg-[#ECF0F1] text-main-blue rounded-full flex items-center justify-center font-bold shrink-0">
                             3</div>
                         <div>
-                            <h3 class="text-lg font-bold text-dark-text">Personalisasi Cerdas</h3>
+                            <h3 class="text-lg font-bold text-dark-text">Paham Kebutuhanmu</h3>
                             <p class="text-grey-text text-sm mt-2 font-medium leading-relaxed">
-                                Dapatkan rekomendasi topik lanjutan berdasarkan kekuatan dan kelemahan hasil belajar
-                                Anda.
+                                Trackerin bakal kasih rekomendasi topik belajar lanjutan berdasarkan hasil evaluasimu, biar kamu tahu bagian mana yang perlu ditingkatkan!
                             </p>
                         </div>
                     </div>
@@ -477,13 +472,10 @@
                 <div
                     class="bg-dark-text text-white-pure rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-12 reveal-scale">
                     <div class="max-w-xl text-left">
-                        <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Akses Dimana
-                            Saja</span>
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mt-4">Bawa Trackerin di saku Anda atau
-                            akses di web</h2>
+                        <span class="text-xs font-bold tracking-widest text-main-blue uppercase">MULTI PLATFORM</span>
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mt-4">Belajar jadi lebih fleksibel lewat smartphone atau laptop</h2>
                         <p class="text-gray-400 mt-6 text-sm md:text-base leading-relaxed">
-                            Nikmati sinkronisasi instan antara aplikasi web di browser dan aplikasi native Kotlin kami
-                            di Android.
+                            Data dan progres belajarmu bakal otomatis tersinkronisasi antara browser laptop dan aplikasi android di smartphone kamu. Kamu bisa lanjut belajar kapan pun dan di mana pun!
                         </p>
                     </div>
 
@@ -510,12 +502,12 @@
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                 <!-- Left Column: Details -->
                 <div class="lg:col-span-5 flex flex-col items-start text-left reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">Hubungi Kami</span>
+                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3 inline-block">Hubungi Kami</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
-                        Ada pertanyaan? <br>Mari <span class="font-serif italic font-normal text-main-blue">berdiskusi</span> bersama kami
+                        Ada pertanyaan? <br>Yuk, <span class="font-serif italic font-normal text-main-blue"> diskusi</span> bersama kami!
                     </h2>
                     <p class="text-grey-text mt-6 text-sm md:text-base font-medium leading-relaxed max-w-md">
-                        Punya pertanyaan mengenai fitur Trackerin, butuh bantuan teknis, ingin memberikan masukan, atau tertarik untuk bekerjasama? Kirim pesan Anda melalui form di samping, dan tim kami akan merespons sesegera mungkin.
+                        Punya kendala teknis, ingin bertanya, beri saran atau tertarik untuk kolaborasi? Tulis pesanmu melalui form di samping, kami akan balas secepatnya!
                     </p>
                     
                     <!-- Contact details -->
@@ -601,7 +593,7 @@
                     <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-8 w-auto">
                 </a>
                 <p class="text-sm text-gray-400 max-w-xs leading-relaxed font-medium">
-                    Platform pemantau belajar berbasis kecerdasan buatan untuk membantu Anda merancang kurikulum dan menguasai materi secara terarah.
+                    Platform learning tracker berbasis AI yang membantu menyusun rencana belajar dan menguasai materi secara lebih terstruktur
                 </p>
             </div>
 
