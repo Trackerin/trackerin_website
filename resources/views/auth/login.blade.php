@@ -27,7 +27,7 @@
             <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            <span>Kembali ke Beranda</span>
+            <span>Kembali ke Dashboard</span>
         </a>
 
         <!-- Premium Auth Card -->
@@ -39,7 +39,7 @@
                     Selamat datang <span class="font-serif italic font-normal text-main-blue">kembali</span>
                 </h1>
                 <p class="text-grey-text text-sm font-medium mt-2">
-                    Masuk untuk melanjutkan pelacakan belajar cerdas Anda.
+                    Yuk, masuk ke akunmu untuk melanjutkan materi dan pantau progres belajarmu hari ini!
                 </p>
             </div>
 
@@ -51,10 +51,7 @@
                 <div class="flex flex-col space-y-1.5">
                     <label for="email" class="text-xs font-bold uppercase tracking-wider text-grey-text">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="name@example.com"
-                        class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium @error('email') border-red-500 @enderror">
-                    @error('email')
-                        <span class="text-xs font-semibold text-red-500 mt-1">{{ $message }}</span>
-                    @enderror
+                        class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
                 </div>
 
                 <!-- Password Input -->
@@ -64,6 +61,8 @@
                     </div>
                     <input type="password" id="password" name="password" required placeholder="••••••••"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
+                        @error('email') <span class="text-xs font-semibold text-red-500 mt-1">Email atau kata sandi yang kamu masukkan salah!</span>
+                        @enderror
                 </div>
 
                 <!-- Remember Me & Forgot Password -->

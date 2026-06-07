@@ -27,7 +27,7 @@
             <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            <span>Kembali ke Beranda</span>
+            <span>Kembali ke Dashboard</span>
         </a>
 
         <!-- Premium Auth Card -->
@@ -36,10 +36,10 @@
             <div class="text-left mb-8">
                 <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-7 w-auto mb-6">
                 <h1 class="text-2xl font-bold tracking-tight text-dark-text letter-tracking">
-                    Mulai belajar <span class="font-serif italic font-normal text-main-blue">cerdas</span>
+                    Siap capai <span class="font-serif italic font-normal text-main-blue">target belajarmu</span>?
                 </h1>
                 <p class="text-grey-text text-sm font-medium mt-2">
-                    Buat akun Trackerin Anda secara gratis hari ini.
+                    Yuk, gabung dan buat akun Trackerin secara gratis sekarang!
                 </p>
             </div>
 
