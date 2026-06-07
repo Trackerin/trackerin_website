@@ -407,7 +407,7 @@
                             class="font-serif italic font-normal text-main-blue">kami</span>
                     </h2>
                     <p class="text-grey-text mt-4 font-medium leading-relaxed">
-                        Simak bagaimana Trackerin membantu ribuan pembelajar mandiri mencapai tujuan akademis mereka.
+                        Simak bagaimana Trackerin membantu ribuan pembelajar dan intip pengalaman seru mereka yang sudah menggunakan platform ini untuk mengatur waktu serta materi belajarnya!"
                     </p>
                 </div>
 
