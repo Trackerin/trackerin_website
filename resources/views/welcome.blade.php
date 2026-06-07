@@ -448,7 +448,7 @@
                     <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-200 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
                             Nyari materi dan konsisten belajar mandiri itu gak mudah, tapi fitur notes sama to-dos Trackerin ngebantu banget buat ngejaga itu. Materi ujian yang banyak jadi rapi dan mudah dipahami. 
-                            Gua bisa nge-track progres harian sampai akhirnya dapet nilai bagus di ujian kemarin. Big appreciation buat tim Trackerin.
+                            Gua bisa nge-track progres harian sampai akhirnya lolos di ujian scholarship kemarin. Big appreciation buat tim Trackerin.
                         </p>
                         <div class="mt-6 flex items-center space-x-3">
                             <div
@@ -456,7 +456,7 @@
                                 D</div>
                             <div>
                                 <h4 class="text-sm font-bold text-dark-text">Bruce Wayne</h4>
-                                <span class="text-xs text-grey-text">Pembelajar Mandiri</span>
+                                <span class="text-xs text-grey-text">Independent Learner</span>
                             </div>
                         </div>
                     </div>
