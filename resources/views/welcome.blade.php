@@ -415,16 +415,15 @@
                     <!-- Testimonial 1 -->
                     <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
-                            "Sebelum memakai Trackerin, saya sering kebingungan membuat kurikulum belajar coding.
-                            Sekarang saya tinggal ketik topik dan silabus belajar langsung jadi!"
+                            Dulu pas awal mau belajar coding bingung banget mau mulai dari mana karena materinya banyak dan berantakan di internet. Pas nyobain Trackerin, tinggal ketik satu topik langsung dibuatin roadmap belajar yang terstruktur banget!"
                         </p>
                         <div class="mt-6 flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 rounded-full bg-main-blue flex items-center justify-center text-white-pure font-bold">
                                 R</div>
                             <div>
-                                <h4 class="text-sm font-bold text-dark-text">Rian Aditya</h4>
-                                <span class="text-xs text-grey-text">Mahasiswa Informatika</span>
+                                <h4 class="text-sm font-bold text-dark-text">Ned Leeds</h4>
+                                <span class="text-xs text-grey-text">Computer Science Student</span>
                             </div>
                         </div>
                     </div>
@@ -432,15 +431,14 @@
                     <!-- Testimonial 2 -->
                     <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-100 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
-                            "Kuis otomatis di akhir milestone sangat berguna untuk memastikan saya benar-benar memahami
-                            topik, bukan cuma asal mencentang kotak selesai."
+                            Jujurrr suka bgt sm sistem kuisnya trackerin!! bener2 gabisa curang asal centang kl blm paham materinya wkwk. jd berasa tertantang tp seru, apalagi ui/ux websitenya clean parah bikin betah scroll n belajar lama2 disitu huaa 😭👍
                         </p>
                         <div class="mt-6 flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 rounded-full bg-main-blue flex items-center justify-center text-white-pure font-bold">
                                 A</div>
                             <div>
-                                <h4 class="text-sm font-bold text-dark-text">Amelia Putri</h4>
+                                <h4 class="text-sm font-bold text-dark-text">Cher Horowitz</h4>
                                 <span class="text-xs text-grey-text">Self-Taught Designer</span>
                             </div>
                         </div>
@@ -449,15 +447,15 @@
                     <!-- Testimonial 3 -->
                     <div class="gradient-border-card p-6 sm:p-8 flex flex-col justify-between reveal delay-200 hover-lift">
                         <p class="text-dark-text text-sm font-medium italic leading-relaxed">
-                            "Fitur to-dos dan catatan per materi sangat terorganisasi dengan rapi. Sangat membantu saya
-                            lulus ujian beasiswa secara mandiri."
+                            Nyari materi dan konsisten belajar mandiri itu gak mudah, tapi fitur notes sama to-dos Trackerin ngebantu banget buat ngejaga itu. Materi ujian yang banyak jadi rapi dan mudah dipahami. 
+                            Gua bisa nge-track progres harian sampai akhirnya dapet nilai bagus di ujian kemarin. Big appreciation buat tim Trackerin.
                         </p>
                         <div class="mt-6 flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 rounded-full bg-main-blue flex items-center justify-center text-white-pure font-bold">
                                 D</div>
                             <div>
-                                <h4 class="text-sm font-bold text-dark-text">Dani Wijaya</h4>
+                                <h4 class="text-sm font-bold text-dark-text">Bruce Wayne</h4>
                                 <span class="text-xs text-grey-text">Pembelajar Mandiri</span>
                             </div>
                         </div>
