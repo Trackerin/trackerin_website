@@ -37,7 +37,9 @@ class AiQuizService
 
         $prompt = "Buatkan tepat 3 pertanyaan kuis pilihan ganda yang relevan untuk sub-materi '{$milestoneTitle}' "
                 . "dalam konteks kurikulum '{$curriculumTopic}'. "
-                . "Setiap pertanyaan harus memiliki 4 pilihan jawaban yang salah satunya benar.";
+                . "Setiap pertanyaan harus memiliki 4 pilihan jawaban yang salah satunya benar. "
+                . "Pilihan jawaban salah (distractor) harus dirancang secara akademis: realistis, memiliki tingkat kesulitan sedang hingga tinggi, dan tampak masuk akal (tidak terlalu gampang atau obvious), sehingga kuis ini benar-benar menguji pemahaman mendalam mengenai konsep '{$milestoneTitle}'. "
+                . "Hindari pilihan jawaban yang konyol, bertentangan secara ekstrem, atau mudah dieliminasi.";
 
         $payload = [
             'contents' => [
