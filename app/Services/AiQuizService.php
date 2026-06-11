@@ -37,9 +37,11 @@ class AiQuizService
 
         $prompt = "Buatkan tepat 3 pertanyaan kuis pilihan ganda yang relevan untuk sub-materi '{$milestoneTitle}' "
                 . "dalam konteks kurikulum '{$curriculumTopic}'. "
-                . "Setiap pertanyaan harus memiliki 4 pilihan jawaban yang salah satunya benar. "
+                . "Setiap pertanyaan harus memiliki tepat 4 pilihan jawaban yang salah satunya benar. "
                 . "Pilihan jawaban salah (distractor) harus dirancang secara akademis: realistis, memiliki tingkat kesulitan sedang hingga tinggi, dan tampak masuk akal (tidak terlalu gampang atau obvious), sehingga kuis ini benar-benar menguji pemahaman mendalam mengenai konsep '{$milestoneTitle}'. "
-                . "Hindari pilihan jawaban yang konyol, bertentangan secara ekstrem, atau mudah dieliminasi.";
+                . "Hindari pilihan jawaban yang konyol, bertentangan secara ekstrem, atau mudah dieliminasi. "
+                . "PENTING: Array 'options' harus berisi persis 4 string teks pilihan jawaban lengkap. JANGAN pernah memisahkan huruf pilihan ('A', 'B', 'C', 'D') menjadi elemen tersendiri di dalam array 'options', dan JANGAN menambahkan prefiks huruf pilihan ('A. ', 'B. ', dll.) di dalam teks opsi jika tidak diperlukan. "
+                . "String pada 'correct_answer' harus sama persis karakternya dengan salah satu opsi yang ada di dalam array 'options'.";
 
         $payload = [
             'contents' => [
@@ -69,10 +71,12 @@ class AiQuizService
                                     ],
                                     'options' => [
                                         'type' => 'ARRAY',
-                                        'description' => 'Daftar 4 opsi jawaban',
+                                        'description' => 'Daftar 4 opsi jawaban lengkap. Hanya berisi tepat 4 opsi berupa teks penjelasan jawaban, dilarang memasukkan label huruf seperti A, B, C, D sebagai elemen terpisah.',
                                         'items' => [
                                             'type' => 'STRING'
-                                        ]
+                                        ],
+                                        'minItems' => 4,
+                                        'maxItems' => 4
                                     ],
                                     'correct_answer' => [
                                         'type' => 'STRING',

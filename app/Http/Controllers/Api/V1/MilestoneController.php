@@ -76,12 +76,13 @@ class MilestoneController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Prevent generating a new quiz if there's an unfinished one for this milestone
-        $existingQuiz = $milestone->quizzes()->latest()->first();
-        if ($existingQuiz && is_null($existingQuiz->score)) {
+        // Return the existing quiz if it already exists to avoid duplicate generation/error
+        $existingQuiz = $milestone->quizzes()->with('quizQuestions')->latest()->first();
+        if ($existingQuiz) {
             return response()->json([
-                'message' => 'Anda harus mengerjakan kuis yang sudah digenerate sebelumnya sebelum bisa men-generate ulang kuis baru.'
-            ], 422);
+                'message' => 'Kuis berhasil diambil',
+                'data' => new \App\Http\Resources\Api\V1\QuizResource($existingQuiz)
+            ], 200);
         }
 
         $generatedData = $aiQuizService->generateQuiz($milestone);
