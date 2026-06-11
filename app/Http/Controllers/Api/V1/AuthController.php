@@ -299,6 +299,13 @@ class AuthController extends Controller
             $payload = $client->verifyIdToken($request->token);
 
             if ($payload) {
+                // Verify that the token audience matches our registered client IDs to prevent Token Substitution attacks
+                if (!isset($payload['aud']) || !in_array($payload['aud'], $clientIds)) {
+                    return response()->json([
+                        'message' => 'Unauthorized Google token audience.'
+                    ], 401);
+                }
+
                 $user = User::firstOrCreate(
                     ['email' => $payload['email']],
                     [

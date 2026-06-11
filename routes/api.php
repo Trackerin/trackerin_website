@@ -12,15 +12,15 @@ use App\Http\Controllers\Api\V1\NotificationController;
 
 Route::prefix('v1')->group(function () {
     // Public Auth Routes
-    Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/login/google', [AuthController::class, 'googleTokenLogin']);
-    Route::post('/forgot-password/send-otp', [AuthController::class, 'sendForgotPasswordOtp']);
-    Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+    Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp'])->middleware('throttle:3,1');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+    Route::post('/login/google', [AuthController::class, 'googleTokenLogin'])->middleware('throttle:10,1');
+    Route::post('/forgot-password/send-otp', [AuthController::class, 'sendForgotPasswordOtp'])->middleware('throttle:3,1');
+    Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword'])->middleware('throttle:5,1');
     
     // Public Contact Route
-    Route::post('/contact', [ContactController::class, 'store']);
+    Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:3,1');
 
     // Protected Auth Routes
     Route::middleware('auth:sanctum')->group(function () {
@@ -42,5 +42,6 @@ Route::prefix('v1')->group(function () {
         Route::delete('curriculums/{curriculum}', [CurriculumController::class, 'destroy']);
         Route::put('milestones/{milestone}/complete', [MilestoneController::class, 'updateProgress']);
         Route::post('milestones/{milestone}/generate-quiz', [MilestoneController::class, 'generateQuiz'])->middleware('throttle:ai-generator');
+        Route::post('milestones/{milestone}/quiz/submit', [MilestoneController::class, 'submitQuiz']);
     });
 });
