@@ -14,7 +14,7 @@ class AiCurriculumService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model = config('services.gemini.model', 'gemini-1.5-flash');
+        $this->model = config('services.gemini.model', 'gemini-2.5-flash');
         $this->baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
     }
 
@@ -95,8 +95,8 @@ class AiCurriculumService
     {
         $models = [
             $this->model,
-            'gemini-1.5-flash',
-            'gemini-1.5-flash-latest'
+            'gemini-3.5-flash',
+            'gemini-3.1-flash-lite'
         ];
         $models = array_values(array_unique($models));
 
