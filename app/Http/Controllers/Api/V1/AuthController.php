@@ -285,9 +285,10 @@ class AuthController extends Controller
         try {
             $client = new \Google_Client();
             
-            // Allow token verification against either Android Client ID or Web Client ID
+            // Allow token verification against either Android Client IDs or Web Client ID
             $clientIds = array_filter([
                 env('GOOGLE_ANDROID_CLIENT_ID'),
+                env('GOOGLE_ANDROID_RELEASE_CLIENT_ID'),
                 env('GOOGLE_CLIENT_ID')
             ]);
             
