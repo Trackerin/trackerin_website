@@ -83,4 +83,14 @@ class CurriculumController extends Controller
             return response()->json(['message' => 'Gagal menyimpan kurikulum: ' . $e->getMessage()], 500);
         }
     }
+
+    public function destroy(Request $request, Curriculum $curriculum)
+    {
+        if ($curriculum->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $curriculum->delete();
+        return response()->json(['message' => 'Kurikulum berhasil dihapus']);
+    }
 }
