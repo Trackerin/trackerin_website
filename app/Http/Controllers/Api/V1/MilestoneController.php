@@ -76,6 +76,18 @@ class MilestoneController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
+        // Enforce that previous milestones must be completed first
+        $uncompletedPrevMilestone = $milestone->curriculum->milestones()
+            ->where('order_index', '<', $milestone->order_index)
+            ->where('is_completed', false)
+            ->exists();
+
+        if ($uncompletedPrevMilestone) {
+            return response()->json([
+                'message' => 'Selesaikan milestone sebelumnya terlebih dahulu!'
+            ], 422);
+        }
+
         // Return the existing quiz if it already exists to avoid duplicate generation/error
         $existingQuiz = $milestone->quizzes()->with('quizQuestions')->latest()->first();
         if ($existingQuiz) {
