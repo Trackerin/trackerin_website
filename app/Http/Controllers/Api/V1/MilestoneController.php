@@ -42,6 +42,25 @@ class MilestoneController extends Controller
                 'total_progress' => $progress,
                 'is_completed' => $progress == 100
             ]);
+
+            // Add notifications if marked as completed
+            if ($isCompleted) {
+                $request->user()->notifications()->create([
+                    'title' => 'Milestone Selesai! 🎉',
+                    'message' => 'Selamat! Kamu telah menyelesaikan milestone "' . $milestone->title . '" dalam kurikulum "' . $curriculum->topic . '".',
+                    'is_read' => false,
+                    'sent_at' => now(),
+                ]);
+
+                if ($progress == 100) {
+                    $request->user()->notifications()->create([
+                        'title' => 'Roadmap Selesai! 🏆',
+                        'message' => 'Luar biasa! Kamu telah menyelesaikan seluruh roadmap belajar "' . $curriculum->topic . '". Terus tingkatkan kemampuanmu!',
+                        'is_read' => false,
+                        'sent_at' => now(),
+                    ]);
+                }
+            }
         }
 
         return response()->json([

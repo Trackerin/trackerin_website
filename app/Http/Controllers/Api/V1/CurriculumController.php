@@ -59,6 +59,14 @@ class CurriculumController extends Controller
                 ]);
             }
 
+            // Create notification record in DB
+            $request->user()->notifications()->create([
+                'title' => 'Roadmap Baru Dibuat! 🗺️',
+                'message' => 'Roadmap baru untuk topik "' . ($generatedData['topic'] ?? $request->topic) . '" berhasil dibuat menggunakan AI!',
+                'is_read' => false,
+                'sent_at' => now(),
+            ]);
+
             \Illuminate\Support\Facades\DB::commit();
 
             $curriculum->load(['milestones' => function($q) {
