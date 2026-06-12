@@ -26,6 +26,13 @@ class NoteController extends Controller
             'content' => 'required|string'
         ]);
 
+        if ($request->milestone_id) {
+            $milestone = \App\Models\Milestone::find($request->milestone_id);
+            if ($milestone && $milestone->curriculum->user_id !== $request->user()->id) {
+                return response()->json(['message' => 'Unauthorized milestone association.'], 403);
+            }
+        }
+
         $note = $request->user()->notes()->create($request->all());
 
         return new NoteResource($note);
@@ -50,6 +57,13 @@ class NoteController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'content' => 'sometimes|required|string'
         ]);
+
+        if ($request->milestone_id) {
+            $milestone = \App\Models\Milestone::find($request->milestone_id);
+            if ($milestone && $milestone->curriculum->user_id !== $request->user()->id) {
+                return response()->json(['message' => 'Unauthorized milestone association.'], 403);
+            }
+        }
 
         $note->update($request->only(['milestone_id', 'title', 'content']));
 

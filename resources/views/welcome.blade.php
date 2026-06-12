@@ -154,7 +154,6 @@
                 class="relative z-10 max-w-[98rem] mx-auto px-4 md:px-6 py-20 sm:py-28 md:py-36 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-screen">
             <!-- Left Side: Custom Font Pairing Content -->
             <div class="flex flex-col items-start text-left">
-                <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-4">AI STUDY COMPANION</span>
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-dark-text tracking-tight leading-tight reveal">
                     Susun target dan belajar lebih <span
                         class="font-serif italic font-normal text-main-blue">cerdas</span> bersama <span
@@ -191,7 +190,6 @@
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="features">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
                 <div class="text-left mb-16 reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Fitur Unggulan</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text mt-4">
                         Belajar lebih <span class="font-serif italic font-normal text-main-blue">terarah</span> dengan integrasi
                         <span class="font-serif italic font-normal text-main-blue">AI</span>
@@ -344,9 +342,6 @@
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Big Typography Info -->
                 <div class="lg:col-span-5 flex flex-col items-start reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3">
-                        Mengapa Trackerin
-                    </span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
                         Belajar mandiri <span class="font-serif italic font-normal text-main-blue">tanpa</span>
                         ribet susun <span class="font-serif italic font-normal text-main-blue">materi</span>
@@ -401,7 +396,6 @@
         <section class="bg-white-pure py-24 border-t border-dark-text/5" id="testimonials">
             <div class="max-w-[98rem] mx-auto px-4 md:px-6">
                 <div class="text-center max-w-3xl mx-auto mb-16 reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase">Testimoni</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text mt-4">
                         Apa kata <span class="font-serif italic font-normal text-main-blue">mereka</span> tentang <span
                             class="font-serif italic font-normal text-main-blue">kami</span>
@@ -484,7 +478,7 @@
                             Continue on Web
                         </a>
                         <!-- Download Android Button -->
-                        <a href="#"
+                        <a href="https://github.com/Trackerin/trackerin-mobile"
                             class="w-full sm:w-auto text-center px-8 py-4 bg-white-pure text-dark-text font-semibold rounded-full border border-white-pure transition-all duration-300 hover:bg-[#ECF0F1] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2">
                             <span>Get Mobile App</span>
                             <img src="{{ asset('images/arrow_right_icon.svg') }}" alt="Arrow"
@@ -500,7 +494,6 @@
             <div class="max-w-[98rem] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                 <!-- Left Column: Details -->
                 <div class="lg:col-span-5 flex flex-col items-start text-left reveal">
-                    <span class="text-xs font-bold tracking-widest text-main-blue uppercase mb-3 inline-block">Hubungi Kami</span>
                     <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-dark-text leading-tight">
                         Ada pertanyaan? <br>Yuk, <span class="font-serif italic font-normal text-main-blue"> diskusi</span> bersama kami!
                     </h2>
