@@ -274,7 +274,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
         if ($user && $user->last_login_at) {
-            $diffInSeconds = now()->diffInSeconds($user->last_login_at);
+            $diffInSeconds = (int) max(0, now()->diffInSeconds($user->last_login_at));
             $user->total_study_time += $diffInSeconds;
             $user->last_login_at = null;
             $user->save();
