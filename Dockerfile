@@ -1,18 +1,26 @@
-# Stage 1: Build Node.js assets
+# ==========================================
+# Stage 1: Build Node.js Assets
+# ==========================================
 FROM node:20-alpine as node_builder
 WORKDIR /app
+
+# Memanfaatkan Docker cache untuk node_modules
 COPY package*.json ./
 RUN npm install
+
+# Copy seluruh source code dan build aset
 COPY . .
 RUN npm run build
 
-# Stage 2: Build PHP App
+# ==========================================
+# Stage 2: Build PHP Application Environment
+# ==========================================
 FROM php:8.4-fpm-alpine
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions for PostgreSQL, GD, Zip, etc.
+# Install system dependencies dan PHP extensions yang dibutuhkan
 RUN apk add --no-cache \
     git \
     curl \
@@ -27,23 +35,31 @@ RUN apk add --no-cache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_pgsql pgsql gd zip intl opcache
 
-# Install Composer
+# Install Composer dari image resmi
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy existing application directory contents
+# Memanfaatkan Docker cache untuk vendor Laravel
+# Menyalin composer files terlebih dahulu agar tidak install ulang jika hanya mengubah code/blade
+COPY composer*.json ./
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction --no-progress
+
+# Copy seluruh source code aplikasi
 COPY . .
 
-# Copy built assets from Stage 1
+# Pastikan folder public ada sebelum disalin dari stage builder
+RUN mkdir -p public/build
+
+# Salin hasil build aset frontend dari Stage 1
 COPY --from=node_builder /app/public/build ./public/build
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+# Jalankan script composer post-autoload-dump jika diperlukan
+RUN composer dump-autoload --no-dev --optimize
 
-# Set directory permissions for Laravel
+# Atur permission direktori untuk keamanan Laravel & Web Server
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Expose port 9000 and start php-fpm server
+# Expose port 9000 dan jalankan php-fpm
 EXPOSE 9000
 CMD ["php-fpm"]

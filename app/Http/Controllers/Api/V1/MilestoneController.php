@@ -42,6 +42,27 @@ class MilestoneController extends Controller
                 'total_progress' => $progress,
                 'is_completed' => $progress == 100
             ]);
+
+            // Add notifications if marked as completed
+            if ($isCompleted) {
+                $request->user()->incrementDailyActivity(20);
+
+                $request->user()->notifications()->create([
+                    'title' => 'Milestone Selesai! 🎉',
+                    'message' => 'Selamat! Kamu telah menyelesaikan milestone "' . $milestone->title . '" dalam kurikulum "' . $curriculum->topic . '".',
+                    'is_read' => false,
+                    'sent_at' => now(),
+                ]);
+
+                if ($progress == 100) {
+                    $request->user()->notifications()->create([
+                        'title' => 'Roadmap Selesai! 🏆',
+                        'message' => 'Luar biasa! Kamu telah menyelesaikan seluruh roadmap belajar "' . $curriculum->topic . '". Terus tingkatkan kemampuanmu!',
+                        'is_read' => false,
+                        'sent_at' => now(),
+                    ]);
+                }
+            }
         }
 
         return response()->json([
@@ -57,12 +78,25 @@ class MilestoneController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Prevent generating a new quiz if there's an unfinished one for this milestone
-        $existingQuiz = $milestone->quizzes()->latest()->first();
-        if ($existingQuiz && is_null($existingQuiz->score)) {
+        // Enforce that previous milestones must be completed first
+        $uncompletedPrevMilestone = $milestone->curriculum->milestones()
+            ->where('order_index', '<', $milestone->order_index)
+            ->where('is_completed', false)
+            ->exists();
+
+        if ($uncompletedPrevMilestone) {
             return response()->json([
-                'message' => 'Anda harus mengerjakan kuis yang sudah digenerate sebelumnya sebelum bisa men-generate ulang kuis baru.'
+                'message' => 'Selesaikan milestone sebelumnya terlebih dahulu!'
             ], 422);
+        }
+
+        // Return the existing quiz if it already exists to avoid duplicate generation/error
+        $existingQuiz = $milestone->quizzes()->with('quizQuestions')->latest()->first();
+        if ($existingQuiz) {
+            return response()->json([
+                'message' => 'Kuis berhasil diambil',
+                'data' => new \App\Http\Resources\Api\V1\QuizResource($existingQuiz)
+            ], 200);
         }
 
         $generatedData = $aiQuizService->generateQuiz($milestone);
@@ -105,5 +139,32 @@ class MilestoneController extends Controller
             \Illuminate\Support\Facades\DB::rollBack();
             return response()->json(['message' => 'Gagal menyimpan kuis: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function submitQuiz(Request $request, Milestone $milestone)
+    {
+        if ($milestone->curriculum->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'score' => 'required|integer|min:0'
+        ]);
+
+        $quiz = $milestone->quizzes()->latest()->first();
+
+        if (!$quiz) {
+            return response()->json(['message' => 'Quiz not found for this milestone'], 404);
+        }
+
+        $quiz->update([
+            'score' => $request->score,
+            'is_passed' => $request->score >= 2,
+        ]);
+
+        return response()->json([
+            'message' => 'Quiz score submitted successfully',
+            'data' => new \App\Http\Resources\Api\V1\QuizResource($quiz)
+        ]);
     }
 }

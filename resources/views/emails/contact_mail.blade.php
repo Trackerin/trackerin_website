@@ -149,7 +149,6 @@
             <!-- Footer -->
             <div class="email-footer">
                 <p>&copy; {{ date('Y') }} Trackerin. All rights reserved.</p>
-                <p>Personalized Learning Tracker dengan dukungan AI.</p>
             </div>
         </div>
     </div>

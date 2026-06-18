@@ -59,6 +59,14 @@ class CurriculumController extends Controller
                 ]);
             }
 
+            // Create notification record in DB
+            $request->user()->notifications()->create([
+                'title' => 'Roadmap Baru Dibuat! 🗺️',
+                'message' => 'Roadmap baru untuk topik "' . ($generatedData['topic'] ?? $request->topic) . '" berhasil dibuat menggunakan AI!',
+                'is_read' => false,
+                'sent_at' => now(),
+            ]);
+
             \Illuminate\Support\Facades\DB::commit();
 
             $curriculum->load(['milestones' => function($q) {
@@ -74,5 +82,15 @@ class CurriculumController extends Controller
             \Illuminate\Support\Facades\DB::rollBack();
             return response()->json(['message' => 'Gagal menyimpan kurikulum: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function destroy(Request $request, Curriculum $curriculum)
+    {
+        if ($curriculum->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $curriculum->delete();
+        return response()->json(['message' => 'Kurikulum berhasil dihapus']);
     }
 }
