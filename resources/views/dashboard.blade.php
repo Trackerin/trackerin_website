@@ -17,17 +17,44 @@
             letter-spacing: -0.05em !important;
         }
         
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-link:hover:not(.active-nav-link) {
+            background-color: rgba(47, 108, 249, 0.05) !important;
+            transform: translateX(4px);
+        }
+        
         .active-nav-link {
-            background-color: rgba(47, 108, 249, 0.08) !important;
-            color: #2F6CF9 !important;
-            border-left: 3px solid #2F6CF9;
+            background: linear-gradient(135deg, #2F6CF9 0%, #1A4FB8 100%) !important;
+            color: #FFFFFF !important;
+            border-left: none !important;
+            font-weight: 800 !important;
+            box-shadow: 0 8px 20px -6px rgba(47, 108, 249, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        .active-nav-link svg {
+            stroke: #FFFFFF !important;
         }
         
         @media (max-width: 768px) {
-            .active-nav-link {
+            .nav-link:hover:not(.active-nav-link) {
                 background-color: transparent !important;
-                border-left: none;
-                border-bottom: 2px solid #2F6CF9;
+                transform: none;
+            }
+            .active-nav-link {
+                background: transparent !important;
+                color: #2F6CF9 !important;
+                border-left: none !important;
+                border-bottom: 3.5px solid #2F6CF9 !important;
+                box-shadow: none !important;
+                border-radius: 0px !important;
+                transform: none !important;
+            }
+            .active-nav-link svg {
+                stroke: #2F6CF9 !important;
             }
         }
 
@@ -87,9 +114,17 @@
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
                     <span>My Roadmaps</span>
                 </a>
+                <a href="#" data-view="view-todo" class="nav-link flex items-center space-x-3.5 px-4 py-3 rounded-xl text-xs font-bold text-grey-text hover:text-dark-text transition-all duration-300">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    <span>Daftar Tugas</span>
+                </a>
+                <a href="#" data-view="view-notes" class="nav-link flex items-center space-x-3.5 px-4 py-3 rounded-xl text-xs font-bold text-grey-text hover:text-dark-text transition-all duration-300">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    <span>Catatan Belajar</span>
+                </a>
                 <a href="#" data-view="view-profile" class="nav-link flex items-center space-x-3.5 px-4 py-3 rounded-xl text-xs font-bold text-grey-text hover:text-dark-text transition-all duration-300">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                    <span>Profil & Notes</span>
+                    <span>Profil Saya</span>
                 </a>
             </nav>
         </div>
@@ -118,7 +153,15 @@
         </a>
         <a href="#" data-view="view-roadmaps" class="nav-link flex flex-col items-center justify-center flex-1 h-full py-1.5 text-grey-text">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
-            <span class="text-[9px] font-bold mt-1">My Roadmaps</span>
+            <span class="text-[9px] font-bold mt-1">Roadmaps</span>
+        </a>
+        <a href="#" data-view="view-todo" class="nav-link flex flex-col items-center justify-center flex-1 h-full py-1.5 text-grey-text">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+            <span class="text-[9px] font-bold mt-1">To Do</span>
+        </a>
+        <a href="#" data-view="view-notes" class="nav-link flex flex-col items-center justify-center flex-1 h-full py-1.5 text-grey-text">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+            <span class="text-[9px] font-bold mt-1">Notes</span>
         </a>
         <a href="#" data-view="view-profile" class="nav-link flex flex-col items-center justify-center flex-1 h-full py-1.5 text-grey-text">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
@@ -359,13 +402,141 @@
         </section>
 
         <!-- ==========================================
-             TAB 4: VIEW PROFILE & SETTINGS
+             TAB 4: VIEW TO DO LIST
+             ========================================== -->
+        <section id="view-todo" class="view-pane hidden space-y-6">
+            <div class="max-w-3xl">
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-dark-text letter-tracking">
+                    Daftar Tugas <span class="font-serif italic font-normal text-main-blue">Belajar</span>
+                </h1>
+                <p class="text-xs text-grey-text font-semibold mt-1">Kelola tugas belajar harian Anda secara mandiri di sini. Tandai yang selesai untuk melacak waktu keaktifan Anda.</p>
+            </div>
+
+            <!-- Full Todo Manager Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left Column: Add Task (5 Cols) -->
+                <div class="lg:col-span-5">
+                    <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text" id="todo-manager-title">Tambah Tugas Baru</h3>
+                        <form id="full-todo-form" class="space-y-4">
+                            <input type="hidden" id="edit-todo-id" value="">
+                            <div class="flex flex-col space-y-1.5">
+                                <label for="todo-task-title" class="text-xs font-bold uppercase tracking-wider text-grey-text">Judul Tugas</label>
+                                <input type="text" id="todo-task-title" required placeholder="Belajar syntax basic Python..."
+                                       class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
+                            </div>
+                            <div class="flex flex-col space-y-1.5">
+                                <label for="todo-task-desc" class="text-xs font-bold uppercase tracking-wider text-grey-text">Deskripsi (Opsional)</label>
+                                <textarea id="todo-task-desc" rows="3" placeholder="Selesaikan module 1 sampai 4..."
+                                          class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300 resize-none"></textarea>
+                            </div>
+                            <div class="flex flex-col space-y-1.5">
+                                <label for="todo-task-due" class="text-xs font-bold uppercase tracking-wider text-grey-text">Batas Waktu (Due Date)</label>
+                                <input type="date" id="todo-task-due"
+                                       class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" id="todo-submit-btn" class="flex-1 py-3.5 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full flex items-center justify-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                                    <span>Tambah Tugas</span>
+                                </button>
+                                <button type="button" id="todo-cancel-edit-btn" class="hidden px-5 py-3.5 border border-dark-text/10 text-dark-text hover:bg-white-bg text-xs font-bold rounded-full transition-all duration-200" onclick="window.trackerinDashboard.cancelEditTodo()">
+                                    Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: Task List & Filters (7 Cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-5">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text">Daftar Tugas Anda</h3>
+                            <!-- Filters -->
+                            <div class="flex items-center space-x-1.5 bg-white-bg border border-dark-text/5 p-1 rounded-xl">
+                                <button type="button" onclick="window.trackerinDashboard.filterTodos('all')" id="todo-filter-all" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-dark-text text-white-pure transition-all duration-200">Semua</button>
+                                <button type="button" onclick="window.trackerinDashboard.filterTodos('active')" id="todo-filter-active" class="px-3 py-1.5 rounded-lg text-[10px] font-bold text-grey-text hover:text-dark-text transition-all duration-200">Aktif</button>
+                                <button type="button" onclick="window.trackerinDashboard.filterTodos('completed')" id="todo-filter-completed" class="px-3 py-1.5 rounded-lg text-[10px] font-bold text-grey-text hover:text-dark-text transition-all duration-200">Selesai</button>
+                            </div>
+                        </div>
+
+                        <!-- Complete Todo List Container -->
+                        <div id="full-todos-list-container" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                            <div class="text-center py-8 text-grey-text text-sm font-medium">Memuat tugas belajar...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 5: VIEW NOTES
+             ========================================== -->
+        <section id="view-notes" class="view-pane hidden space-y-6">
+            <div class="max-w-3xl">
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-dark-text letter-tracking">
+                    Catatan <span class="font-serif italic font-normal text-main-blue">Belajar</span>
+                </h1>
+                <p class="text-xs text-grey-text font-semibold mt-1">Simpan ringkasan materi, ide, dan catatan belajar Anda di sini agar mudah ditinjau kembali kapan saja.</p>
+            </div>
+
+            <!-- Full Notes Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left Column: Add/Edit General Note (5 Cols) -->
+                <div class="lg:col-span-5">
+                    <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text" id="notes-manager-title">Buat Catatan Baru</h3>
+                        <form id="full-note-form" class="space-y-4">
+                            <input type="hidden" id="edit-note-id" value="">
+                            <div class="flex flex-col space-y-1.5">
+                                <label for="note-title" class="text-xs font-bold uppercase tracking-wider text-grey-text">Judul Catatan</label>
+                                <input type="text" id="note-title" required placeholder="Ringkasan OOP Javascript..."
+                                       class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
+                            </div>
+                            <div class="flex flex-col space-y-1.5">
+                                <label for="note-content" class="text-xs font-bold uppercase tracking-wider text-grey-text">Isi Catatan</label>
+                                <textarea id="note-content" rows="6" required placeholder="Tulis catatan lengkap belajar Anda..."
+                                          class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300 resize-none"></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" class="flex-1 py-3.5 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full" id="note-submit-btn">
+                                    Simpan Catatan
+                                </button>
+                                <button type="button" id="note-cancel-edit-btn" class="hidden px-5 py-3.5 border border-dark-text/10 text-dark-text hover:bg-white-bg text-xs font-bold rounded-full transition-all duration-200" onclick="window.trackerinDashboard.cancelEditNote()">
+                                    Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: Notes List & Search (7 Cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-5">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text">Daftar Catatan</h3>
+                            <input type="text" id="notes-search-filter" placeholder="Cari catatan..."
+                                   class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-full px-4 py-2 text-xs font-medium outline-none transition-all duration-300">
+                        </div>
+
+                        <!-- Complete Notes List Container -->
+                        <div id="full-notes-list-container" class="space-y-4 max-h-[500px] overflow-y-auto pr-1">
+                            <div class="text-center py-6"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-main-blue mx-auto"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 6: VIEW PROFILE & SETTINGS
              ========================================== -->
         <section id="view-profile" class="view-pane hidden space-y-8">
             <div class="flex flex-col lg:flex-row gap-8 items-start">
                 
                 <!-- Left: Edit Profile Credentials Form -->
-                <div class="w-full lg:w-1/2 space-y-6">
+                <div class="w-full lg:w-7/12 space-y-6">
                     <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-6">
                         <!-- Profile Card Header -->
                         <div class="flex items-center space-x-4 pb-6 border-b border-dark-text/5">
@@ -415,26 +586,24 @@
                                            class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
                                 </div>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="flex flex-col space-y-1.5">
-                                    <label for="profile-pass-input" class="text-xs font-bold uppercase tracking-wider text-grey-text">Sandi Baru (Optional)</label>
-                                    <input type="password" id="profile-pass-input" placeholder="Kosongkan jika tidak diganti"
-                                           class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
-                                </div>
-                                <div class="flex flex-col space-y-1.5">
-                                    <label for="profile-pass-confirm-input" class="text-xs font-bold uppercase tracking-wider text-grey-text">Konfirmasi Sandi Baru</label>
-                                    <input type="password" id="profile-pass-confirm-input" placeholder="Konfirmasi sandi baru"
-                                           class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
-                                </div>
-                            </div>
 
-                            <button type="submit" class="w-full py-3.5 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
-                                Simpan Perubahan
-                            </button>
+                            <div class="pt-4 border-t border-dark-text/5 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                <a href="{{ route('change-password') }}" class="px-5 py-3 rounded-full border border-dark-text/10 hover:border-dark-text/30 bg-white-pure hover:bg-white-bg text-dark-text font-bold text-xs transition-all duration-300 active:scale-[0.98] inline-flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-grey-text" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    <span>Ubah Kata Sandi</span>
+                                </a>
+                                <button type="submit" class="px-8 py-3.5 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full shrink-0">
+                                    Simpan Perubahan
+                                </button>
+                            </div>
                         </form>
                     </div>
+                </div>
 
-                    <!-- Contact Us Widget Inside Profile -->
+                <!-- Right: Contact Us Form -->
+                <div class="w-full lg:w-5/12 space-y-6">
                     <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-4">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text">Hubungi Kami</h3>
                         <form id="dashboard-contact-form" class="space-y-4">
@@ -452,17 +621,6 @@
                                 Kirim Pesan
                             </button>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Right: Saved Notes List -->
-                <div class="w-full lg:w-1/2 space-y-6">
-                    <div class="gradient-border-card p-6 shadow-sm bg-white-pure border border-dark-text/5 space-y-4">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-grey-text">Catatan Belajar Saya</h3>
-                        <div id="saved-notes-list-container" class="space-y-4 max-h-[500px] overflow-y-auto pr-1">
-                            <!-- Loader -->
-                            <div class="text-center py-6"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-main-blue mx-auto"></div></div>
-                        </div>
                     </div>
                 </div>
 

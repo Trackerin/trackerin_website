@@ -17,6 +17,7 @@ class TrackerinDashboard {
             curriculums: [],
             activeCurriculum: null,
             todos: [],
+            notes: [],
             notifications: [],
             activeRoadmapId: null
         };
@@ -29,17 +30,25 @@ class TrackerinDashboard {
         this.updateStreakAndActiveDays();
         this.checkAndResetWeeklyActivity();
         
-        // Fetch User and Core Datasets
-        await this.fetchUser();
-        await this.fetchCurriculums();
-        await this.fetchTodos();
-        await this.fetchNotifications();
-
-        // Setup Event Listeners
+        // Setup Event Listeners first (immediate navigation responsiveness)
         this.setupNavigation();
         this.setupTodoListeners();
         this.setupExploreListeners();
         this.setupProfileListeners();
+        this.setupNotesListeners();
+
+        // Fetch User and Core Datasets in parallel safely
+        try {
+            await Promise.allSettled([
+                this.fetchUser(),
+                this.fetchCurriculums(),
+                this.fetchTodos(),
+                this.fetchNotes(),
+                this.fetchNotifications()
+            ]);
+        } catch (e) {
+            console.error('Error fetching initial data:', e);
+        }
         
         // Initial Rendering
         this.renderAll();
@@ -201,6 +210,17 @@ class TrackerinDashboard {
             this.state.todos = res.data || [];
         } catch (e) {
             this.showToast('Gagal memuat tugas harian', 'error');
+            this.state.todos = [];
+        }
+    }
+
+    async fetchNotes() {
+        try {
+            const res = await this.apiCall('/api/v1/notes');
+            this.state.notes = res.data || [];
+        } catch (e) {
+            this.showToast('Gagal memuat catatan belajar', 'error');
+            this.state.notes = [];
         }
     }
 
@@ -242,6 +262,10 @@ class TrackerinDashboard {
                     this.renderDashboard();
                 } else if (targetViewId === 'view-roadmaps') {
                     this.renderRoadmaps();
+                } else if (targetViewId === 'view-todo') {
+                    this.renderFullTodos();
+                } else if (targetViewId === 'view-notes') {
+                    this.renderFullNotes();
                 } else if (targetViewId === 'view-profile') {
                     this.renderProfile();
                 }
@@ -271,10 +295,53 @@ class TrackerinDashboard {
                     titleInput.value = '';
                     await this.fetchTodos();
                     this.renderTodos();
+                    this.renderFullTodos();
                     this.renderStats();
                     this.showToast('Tugas ditambahkan!', 'success');
                 } catch (err) {
                     this.showToast('Gagal menambahkan tugas', 'error');
+                }
+            });
+        }
+
+        const fullForm = document.getElementById('full-todo-form');
+        if (fullForm) {
+            fullForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-todo-id').value;
+                const title = document.getElementById('todo-task-title').value.trim();
+                const desc = document.getElementById('todo-task-desc').value.trim();
+                const due = document.getElementById('todo-task-due').value;
+
+                if (!title) return;
+
+                const taskJson = JSON.stringify({
+                    title: title,
+                    desc: desc,
+                    due: due
+                });
+
+                try {
+                    const payload = { 
+                        task: taskJson,
+                        due_date: due || null
+                    };
+
+                    if (editId) {
+                        await this.apiCall(`/api/v1/todos/${editId}`, 'PUT', payload);
+                        this.showToast('Tugas berhasil diperbarui!', 'success');
+                    } else {
+                        await this.apiCall('/api/v1/todos', 'POST', payload);
+                        this.showToast('Tugas berhasil ditambahkan!', 'success');
+                    }
+
+                    this.cancelEditTodo();
+                    await this.fetchTodos();
+                    this.renderTodos();
+                    this.renderFullTodos();
+                    this.renderStats();
+                } catch (err) {
+                    this.showToast(err.message || 'Gagal menyimpan tugas', 'error');
                 }
             });
         }
@@ -356,20 +423,9 @@ class TrackerinDashboard {
                 const email = document.getElementById('profile-email-input').value.trim();
                 const occ = document.getElementById('profile-occ-input').value.trim();
                 const spec = document.getElementById('profile-spec-input').value.trim();
-                const password = document.getElementById('profile-pass-input').value;
-                const passwordConfirm = document.getElementById('profile-pass-confirm-input').value;
-
-                if (password && password !== passwordConfirm) {
-                    this.showToast('Konfirmasi kata sandi tidak cocok!', 'error');
-                    return;
-                }
 
                 try {
                     const payload = { name, email };
-                    if (password) {
-                        payload.password = password;
-                        payload.password_confirmation = passwordConfirm;
-                    }
 
                     await this.apiCall('/api/v1/user', 'PUT', payload);
                     
@@ -382,9 +438,6 @@ class TrackerinDashboard {
                     await this.fetchUser();
                     this.renderProfileHeader();
                     this.showToast('Profil berhasil diperbarui!', 'success');
-                    
-                    document.getElementById('profile-pass-input').value = '';
-                    document.getElementById('profile-pass-confirm-input').value = '';
                 } catch (err) {
                     this.showToast(err.message || 'Gagal memperbarui profil', 'error');
                 }
@@ -464,12 +517,58 @@ class TrackerinDashboard {
         }
     }
 
+    setupNotesListeners() {
+        const form = document.getElementById('full-note-form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-note-id').value;
+                const title = document.getElementById('note-title').value.trim();
+                const content = document.getElementById('note-content').value.trim();
+
+                if (!title || !content) return;
+
+                try {
+                    const payload = { title, content, milestone_id: null };
+
+                    if (editId) {
+                        const existingNote = this.state.notes.find(n => n.id === parseInt(editId));
+                        if (existingNote && existingNote.milestone_id) {
+                            payload.milestone_id = existingNote.milestone_id;
+                        }
+                        await this.apiCall(`/api/v1/notes/${editId}`, 'PUT', payload);
+                        this.showToast('Catatan berhasil diperbarui!', 'success');
+                    } else {
+                        await this.apiCall('/api/v1/notes', 'POST', payload);
+                        this.showToast('Catatan berhasil dibuat!', 'success');
+                    }
+
+                    this.cancelEditNote();
+                    await this.fetchNotes();
+                    this.renderSavedNotes();
+                    this.renderFullNotes();
+                } catch (err) {
+                    this.showToast(err.message || 'Gagal menyimpan catatan', 'error');
+                }
+            });
+        }
+
+        const filterInput = document.getElementById('notes-search-filter');
+        if (filterInput) {
+            filterInput.addEventListener('input', () => {
+                this.renderFullNotes();
+            });
+        }
+    }
+
     // ==========================================
     // RENDERERS
     // ==========================================
     renderAll() {
         this.renderDashboard();
         this.renderRoadmaps();
+        this.renderFullTodos();
+        this.renderFullNotes();
         this.renderProfile();
     }
 
@@ -1097,38 +1196,35 @@ class TrackerinDashboard {
         }
     }
 
-    async renderSavedNotes() {
+    renderSavedNotes() {
         const container = document.getElementById('saved-notes-list-container');
         if (!container) return;
 
-        try {
-            const res = await this.apiCall('/api/v1/notes');
-            const notes = res.data || [];
-            
-            if (notes.length === 0) {
-                container.innerHTML = `<p class="text-xs text-grey-text font-medium py-4 text-center">Belum ada catatan belajar yang dibuat.</p>`;
-                return;
-            }
+        const notes = this.state.notes || [];
+        if (notes.length === 0) {
+            container.innerHTML = `<p class="text-xs text-grey-text font-medium py-4 text-center">Belum ada catatan belajar yang dibuat.</p>`;
+            return;
+        }
 
-            container.innerHTML = `
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    ${notes.map(n => `
-                        <div class="p-4 bg-white-bg/40 border border-dark-text/5 rounded-2xl flex flex-col justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-dark-text uppercase tracking-wider mb-2">${n.milestone_title || 'General Note'}</h4>
-                                <p class="text-xs text-grey-text leading-relaxed font-medium whitespace-pre-wrap">${n.content}</p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-dark-text/5 flex justify-between items-center text-[10px] text-grey-text">
-                                <span>Terakhir diupdate</span>
-                                <button onclick="window.trackerinDashboard.deleteNote(${n.id})" class="text-red-500 font-bold hover:underline">Hapus</button>
+        container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                ${notes.map(n => `
+                    <div class="p-4 bg-white-bg/40 border border-dark-text/5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-dark-text uppercase tracking-wider mb-2">${n.milestone_title || 'Catatan Umum'}</h4>
+                            <p class="text-xs text-grey-text leading-relaxed font-medium whitespace-pre-wrap line-clamp-4">${n.content}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-dark-text/5 flex justify-between items-center text-[10px] text-grey-text font-bold">
+                            <span>${new Date(n.updated_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="window.trackerinDashboard.editNoteFromProfile(${n.id})" class="text-main-blue hover:underline">Edit</button>
+                                <button onclick="window.trackerinDashboard.deleteNote(${n.id})" class="text-red-500 hover:underline">Hapus</button>
                             </div>
                         </div>
-                    `).join('')}
-                </div>
-            `;
-        } catch(e) {
-            container.innerHTML = `<p class="text-xs text-red-500 font-medium py-4">Gagal memuat catatan belajar.</p>`;
-        }
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
 
     async deleteNote(noteId) {
@@ -1136,7 +1232,9 @@ class TrackerinDashboard {
         try {
             await this.apiCall(`/api/v1/notes/${noteId}`, 'DELETE');
             this.showToast('Catatan berhasil dihapus', 'success');
+            await this.fetchNotes();
             this.renderSavedNotes();
+            this.renderFullNotes();
         } catch(e) {
             this.showToast('Gagal menghapus catatan', 'error');
         }
@@ -1150,6 +1248,7 @@ class TrackerinDashboard {
             await this.apiCall(`/api/v1/todos/${id}`, 'PUT', { is_done: !currentDone });
             await this.fetchTodos();
             this.renderTodos();
+            this.renderFullTodos();
             this.renderStats();
         } catch (e) {
             this.showToast('Gagal memperbarui status tugas', 'error');
@@ -1161,11 +1260,271 @@ class TrackerinDashboard {
             await this.apiCall(`/api/v1/todos/${id}`, 'DELETE');
             await this.fetchTodos();
             this.renderTodos();
+            this.renderFullTodos();
             this.renderStats();
             this.showToast('Tugas berhasil dihapus', 'success');
         } catch (e) {
             this.showToast('Gagal menghapus tugas', 'error');
         }
+    }
+
+    renderFullTodos() {
+        const listContainer = document.getElementById('full-todos-list-container');
+        if (!listContainer) return;
+
+        const filter = this.state.todoFilter || 'all';
+        let filteredTodos = this.state.todos || [];
+
+        if (filter === 'active') {
+            filteredTodos = filteredTodos.filter(t => !t.is_done);
+        } else if (filter === 'completed') {
+            filteredTodos = filteredTodos.filter(t => t.is_done);
+        }
+
+        if (filteredTodos.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center py-12 text-grey-text text-sm font-medium">
+                    Tidak ada tugas belajar yang cocok.
+                </div>
+            `;
+            return;
+        }
+
+        listContainer.innerHTML = '';
+        filteredTodos.forEach(t => {
+            let title = t.task;
+            let description = '';
+            let dueStr = '';
+            
+            try {
+                if (t.task.startsWith('{') && t.task.endsWith('}')) {
+                    const parsed = JSON.parse(t.task);
+                    title = parsed.title || 'Untitled';
+                    description = parsed.desc || '';
+                    dueStr = parsed.due || '';
+                }
+            } catch(e) {}
+            
+            if (!dueStr && t.due_date) {
+                dueStr = t.due_date.substring(0, 10);
+            }
+
+            const item = document.createElement('div');
+            item.className = `flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-dark-text/5 bg-white-bg/40 hover:bg-white-bg/85 transition-all duration-300 gap-4 ${t.is_done ? 'opacity-65' : ''}`;
+            
+            let badgeHtml = '';
+            if (dueStr) {
+                const today = this.getTodayDateString();
+                const isOverdue = !t.is_done && dueStr < today;
+                const isToday = dueStr === today;
+                
+                let badgeClass = 'bg-grey-text/10 text-grey-text';
+                if (isOverdue) {
+                    badgeClass = 'bg-red-500/10 text-red-500';
+                } else if (isToday) {
+                    badgeClass = 'bg-orange-500/10 text-orange-500';
+                } else if (t.is_done) {
+                    badgeClass = 'bg-green-500/10 text-green-500';
+                }
+                
+                badgeHtml = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">${dueStr}</span>`;
+            }
+            
+            item.innerHTML = `
+                <div class="flex items-start space-x-3.5 min-w-0 flex-1">
+                    <input type="checkbox" ${t.is_done ? 'checked' : ''} 
+                           class="w-5 h-5 mt-0.5 rounded border-dark-text/10 text-main-blue focus:ring-main-blue cursor-pointer transition-all duration-200 shrink-0"
+                           onclick="window.trackerinDashboard.toggleTodo(${t.id}, ${t.is_done})">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h4 class="text-sm font-bold text-dark-text truncate ${t.is_done ? 'line-through text-grey-text' : ''}">${title}</h4>
+                            ${badgeHtml}
+                        </div>
+                        ${description ? `<p class="text-xs text-grey-text mt-1 whitespace-pre-wrap ${t.is_done ? 'line-through text-grey-text' : ''}">${description}</p>` : ''}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-1 shrink-0 self-end sm:self-center">
+                    <button onclick="window.trackerinDashboard.editTodo(${t.id})" class="p-2 text-grey-text hover:text-main-blue hover:bg-white rounded-lg transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+                    <button onclick="window.trackerinDashboard.deleteTodo(${t.id})" class="p-2 text-grey-text hover:text-red-500 hover:bg-white rounded-lg transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    editTodo(id) {
+        const t = this.state.todos.find(item => item.id === id);
+        if (!t) return;
+
+        let title = t.task;
+        let description = '';
+        let dueStr = '';
+        
+        try {
+            if (t.task.startsWith('{') && t.task.endsWith('}')) {
+                const parsed = JSON.parse(t.task);
+                title = parsed.title || 'Untitled';
+                description = parsed.desc || '';
+                dueStr = parsed.due || '';
+            }
+        } catch(e) {}
+        
+        if (!dueStr && t.due_date) {
+            dueStr = t.due_date.substring(0, 10);
+        }
+
+        document.getElementById('edit-todo-id').value = t.id;
+        document.getElementById('todo-task-title').value = title;
+        document.getElementById('todo-task-desc').value = description;
+        document.getElementById('todo-task-due').value = dueStr;
+
+        const cancelBtn = document.getElementById('todo-cancel-edit-btn');
+        if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+        const submitBtn = document.getElementById('todo-submit-btn');
+        if (submitBtn) {
+            submitBtn.querySelector('span').innerText = "Simpan Perubahan";
+        }
+        
+        const titleHeader = document.getElementById('todo-manager-title');
+        if (titleHeader) titleHeader.innerText = "Edit Tugas Belajar";
+    }
+
+    cancelEditTodo() {
+        const form = document.getElementById('full-todo-form');
+        if (form) form.reset();
+        
+        const editIdInput = document.getElementById('edit-todo-id');
+        if (editIdInput) editIdInput.value = '';
+
+        const cancelBtn = document.getElementById('todo-cancel-edit-btn');
+        if (cancelBtn) cancelBtn.classList.add('hidden');
+
+        const submitBtn = document.getElementById('todo-submit-btn');
+        if (submitBtn) {
+            submitBtn.querySelector('span').innerText = "Tambah Tugas";
+        }
+
+        const titleHeader = document.getElementById('todo-manager-title');
+        if (titleHeader) titleHeader.innerText = "Tambah Tugas Baru";
+    }
+
+    filterTodos(filter) {
+        this.state.todoFilter = filter;
+        
+        const filters = ['all', 'active', 'completed'];
+        filters.forEach(f => {
+            const btn = document.getElementById(`todo-filter-${f}`);
+            if (btn) {
+                if (f === filter) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-[10px] font-bold bg-dark-text text-white-pure transition-all duration-200";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-[10px] font-bold text-grey-text hover:text-dark-text transition-all duration-200";
+                }
+            }
+        });
+        
+        this.renderFullTodos();
+    }
+
+    renderFullNotes() {
+        const listContainer = document.getElementById('full-notes-list-container');
+        if (!listContainer) return;
+
+        const query = document.getElementById('notes-search-filter')?.value.toLowerCase() || '';
+        let filteredNotes = this.state.notes || [];
+
+        if (query) {
+            filteredNotes = filteredNotes.filter(n => {
+                return (n.title || '').toLowerCase().includes(query) || 
+                       (n.content || '').toLowerCase().includes(query) ||
+                       (n.milestone_title || '').toLowerCase().includes(query);
+            });
+        }
+
+        if (filteredNotes.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center py-12 text-grey-text text-sm font-medium">
+                    Tidak ada catatan yang ditemukan.
+                </div>
+            `;
+            return;
+        }
+
+        listContainer.innerHTML = '';
+        filteredNotes.forEach(n => {
+            const item = document.createElement('div');
+            item.className = "gradient-border-card p-5 bg-white-pure hover:shadow-md border border-dark-text/5 rounded-2xl flex flex-col justify-between hover:translate-y-[-2px] transition-all duration-300";
+            item.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start gap-4 mb-2">
+                        <h4 class="text-sm font-bold text-dark-text truncate">${n.title || 'Catatan Belajar'}</h4>
+                        ${n.milestone_title ? `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-main-blue/10 text-main-blue max-w-[150px] truncate" title="${n.milestone_title}">${n.milestone_title}</span>` : ''}
+                    </div>
+                    <p class="text-xs text-grey-text leading-relaxed font-medium whitespace-pre-wrap mb-4">${n.content}</p>
+                </div>
+                <div class="pt-3 border-t border-dark-text/5 flex justify-between items-center text-[10px] font-bold text-grey-text">
+                    <span>${new Date(n.updated_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</span>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="window.trackerinDashboard.editNote(${n.id})" class="text-main-blue hover:underline">Edit</button>
+                        <button onclick="window.trackerinDashboard.deleteNote(${n.id})" class="text-red-500 hover:underline">Hapus</button>
+                    </div>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    editNote(id) {
+        const n = this.state.notes.find(item => item.id === id);
+        if (!n) return;
+
+        document.getElementById('edit-note-id').value = n.id;
+        document.getElementById('note-title').value = n.title;
+        document.getElementById('note-content').value = n.content;
+
+        const cancelBtn = document.getElementById('note-cancel-edit-btn');
+        if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+        const submitBtn = document.getElementById('note-submit-btn');
+        if (submitBtn) {
+            submitBtn.innerText = "Simpan Catatan";
+        }
+        
+        const titleHeader = document.getElementById('notes-manager-title');
+        if (titleHeader) titleHeader.innerText = "Edit Catatan Belajar";
+    }
+
+    editNoteFromProfile(id) {
+        document.querySelector('[data-view="view-notes"]')?.click();
+        this.editNote(id);
+    }
+
+    cancelEditNote() {
+        const form = document.getElementById('full-note-form');
+        if (form) form.reset();
+        
+        const editIdInput = document.getElementById('edit-note-id');
+        if (editIdInput) editIdInput.value = '';
+
+        const cancelBtn = document.getElementById('note-cancel-edit-btn');
+        if (cancelBtn) cancelBtn.classList.add('hidden');
+
+        const submitBtn = document.getElementById('note-submit-btn');
+        if (submitBtn) {
+            submitBtn.innerText = "Simpan Catatan";
+        }
+
+        const titleHeader = document.getElementById('notes-manager-title');
+        if (titleHeader) titleHeader.innerText = "Buat Catatan Baru";
     }
 
     async deleteRoadmap(id) {

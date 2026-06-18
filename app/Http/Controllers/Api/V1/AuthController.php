@@ -374,11 +374,18 @@ class AuthController extends Controller
                 ]
             );
 
-            if (! $user->google_id || ! $user->email_verified_at || ! $user->profile_image) {
+            // Sync google credentials if they are missing
+            if (empty($user->google_id) || empty($user->email_verified_at)) {
                 $user->update([
-                    'google_id' => $user->google_id ?? $googleUser->getId(),
-                    'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
-                    'profile_image' => $user->profile_image ?? $googleUser->getAvatar(),
+                    'google_id' => $user->google_id ?: $googleUser->getId(),
+                    'email_verified_at' => $user->email_verified_at ?: Carbon::now(),
+                ]);
+            }
+
+            // Always sync the google profile image if it is currently empty or is a google avatar URL
+            if (empty($user->profile_image) || str_starts_with($user->profile_image, 'http')) {
+                $user->update([
+                    'profile_image' => $googleUser->getAvatar(),
                 ]);
             }
 
