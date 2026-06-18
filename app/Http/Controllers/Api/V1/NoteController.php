@@ -33,7 +33,7 @@ class NoteController extends Controller
             }
         }
 
-        $note = $request->user()->notes()->create($request->all());
+        $note = $request->user()->notes()->create($request->only(['milestone_id', 'title', 'content']));
 
         return new NoteResource($note);
     }

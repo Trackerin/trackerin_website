@@ -16,12 +16,17 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [WebAuthController::class, 'register']);
 });
 
-Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
-// Dashboard placeholder route
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard')->middleware('auth');
+    // Dashboard placeholder route
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/change-password', [WebAuthController::class, 'showChangePassword'])->name('change-password');
+    Route::post('/change-password', [WebAuthController::class, 'changePassword']);
+});
 
 // Google Sign-In for Web Dashboard
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');

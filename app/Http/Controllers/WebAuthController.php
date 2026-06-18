@@ -128,6 +128,48 @@ class WebAuthController extends Controller
     }
 
     /**
+     * Show the change password form.
+     */
+    public function showChangePassword()
+    {
+        return view('auth.change_password');
+    }
+
+    /**
+     * Handle change password request.
+     */
+    public function changePassword(Request $request)
+    {
+        $user = Auth::user();
+        $hasPassword = !is_null($user->password);
+
+        $rules = [
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ];
+
+        if ($hasPassword) {
+            $rules['current_password'] = ['required', 'string'];
+        }
+
+        $request->validate($rules, [
+            'current_password.required' => 'Kata sandi saat ini harus diisi.',
+            'password.required' => 'Kata sandi baru harus diisi.',
+            'password.min' => 'Kata sandi baru minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
+        ]);
+
+        if ($hasPassword && !Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Kata sandi saat ini yang Anda masukkan salah.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('status', 'Kata sandi berhasil diperbarui.');
+    }
+
+    /**
      * Handle user logout.
      */
     public function logout(Request $request)

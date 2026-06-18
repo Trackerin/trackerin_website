@@ -19,7 +19,23 @@ class TodoController extends Controller
     {
         $request->validate([
             'task' => 'required|string|max:255',
-            'due_date' => 'nullable|date',
+            'due_date' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $d1 = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+                    $d2 = \DateTime::createFromFormat('Y-m-d', $value);
+                    $isoRegex = '/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/';
+                    if (
+                        ($d1 && $d1->format('Y-m-d H:i:s') === $value) ||
+                        ($d2 && $d2->format('Y-m-d') === $value) ||
+                        preg_match($isoRegex, $value)
+                    ) {
+                        return;
+                    }
+                    $fail('Format due_date tidak valid. Harus berupa format tanggal yang valid (misal: Y-m-d, Y-m-d H:i:s, atau ISO 8601).');
+                }
+            ],
             'is_done' => 'boolean'
         ]);
 
@@ -48,7 +64,23 @@ class TodoController extends Controller
 
         $request->validate([
             'task' => 'sometimes|required|string|max:255',
-            'due_date' => 'nullable|date',
+            'due_date' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $d1 = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+                    $d2 = \DateTime::createFromFormat('Y-m-d', $value);
+                    $isoRegex = '/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/';
+                    if (
+                        ($d1 && $d1->format('Y-m-d H:i:s') === $value) ||
+                        ($d2 && $d2->format('Y-m-d') === $value) ||
+                        preg_match($isoRegex, $value)
+                    ) {
+                        return;
+                    }
+                    $fail('Format due_date tidak valid. Harus berupa format tanggal yang valid (misal: Y-m-d, Y-m-d H:i:s, atau ISO 8601).');
+                }
+            ],
             'is_done' => 'sometimes|boolean'
         ]);
 
