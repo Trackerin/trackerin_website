@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class AuthController extends Controller
@@ -369,13 +370,15 @@ class AuthController extends Controller
                     'google_id' => $googleUser->getId(),
                     'password' => null, 
                     'email_verified_at' => Carbon::now(),
+                    'profile_image' => $googleUser->getAvatar(),
                 ]
             );
 
-            if (! $user->google_id || ! $user->email_verified_at) {
+            if (! $user->google_id || ! $user->email_verified_at || ! $user->profile_image) {
                 $user->update([
                     'google_id' => $user->google_id ?? $googleUser->getId(),
                     'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
+                    'profile_image' => $user->profile_image ?? $googleUser->getAvatar(),
                 ]);
             }
 
@@ -384,7 +387,87 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard');
 
         } catch (\Exception $e) {
+            Log::error('Google OAuth Login failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect('/login')->with('error', 'Login via Google failed. ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Update authenticated user profile (Name, Password, etc.)
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ], [
+            'name.required' => 'Nama lengkap harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah digunakan oleh user lain.',
+            'password.min' => 'Kata sandi minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+        ]);
+
+        $user->name = $request->name;
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profil berhasil diperbarui.',
+            'data' => $user
+        ]);
+    }
+
+    /**
+     * Upload profile avatar image
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $user = $request->user();
+        
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'profile_image.required' => 'File gambar profile wajib diunggah.',
+            'profile_image.image' => 'File harus berupa gambar.',
+            'profile_image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'profile_image.max' => 'Ukuran gambar maksimal adalah 2MB.',
+        ]);
+
+        if ($request->hasFile('profile_image')) {
+            // Delete old profile image if it exists and is stored locally in /storage/avatars
+            if ($user->profile_image) {
+                $oldPath = str_replace('/storage/', '', parse_url($user->profile_image, PHP_URL_PATH));
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Save the new file
+            $path = $request->file('profile_image')->store('avatars', 'public');
+            $url = Storage::url($path);
+
+            $user->update([
+                'profile_image' => $url,
+            ]);
+
+            return response()->json([
+                'message' => 'Foto profil berhasil diperbarui.',
+                'profile_image' => $url,
+            ]);
+        }
+
+        return response()->json(['message' => 'Gagal mengunggah gambar.'], 400);
     }
 }

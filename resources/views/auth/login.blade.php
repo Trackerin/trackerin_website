@@ -43,6 +43,12 @@
                 </p>
             </div>
 
+            @if(session('error'))
+                <div class="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-semibold">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- Form -->
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf

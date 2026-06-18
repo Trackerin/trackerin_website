@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function () {
     // Protected Auth Routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
+        Route::put('/user', [AuthController::class, 'updateProfile']);
+        Route::post('/user/avatar', [AuthController::class, 'uploadAvatar']);
         Route::post('/logout', [AuthController::class, 'logout']);
 
         // Core CRUD APIs
