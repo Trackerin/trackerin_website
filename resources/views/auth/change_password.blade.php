@@ -33,13 +33,22 @@
         <!-- Premium Auth Card -->
         <div class="gradient-border-card p-6 sm:p-8 md:p-10 shadow-lg bg-white-pure/80 backdrop-blur-xl border border-dark-text/5">
             <!-- Brand Logo & Header -->
+            <!-- Brand Logo & Header -->
             <div class="text-left mb-8">
                 <img src="{{ asset('images/trackerin_logo.svg') }}" alt="Trackerin Logo" class="h-7 w-auto mb-6">
                 <h1 class="text-2xl font-bold tracking-tight text-dark-text letter-tracking">
-                    Ubah <span class="font-serif italic font-normal text-main-blue">Kata Sandi</span>
+                    @if(is_null(Auth::user()->password))
+                        Atur <span class="font-serif italic font-normal text-main-blue">Kata Sandi</span>
+                    @else
+                        Ubah <span class="font-serif italic font-normal text-main-blue">Kata Sandi</span>
+                    @endif
                 </h1>
                 <p class="text-grey-text text-sm font-medium mt-2">
-                    Untuk keamanan akun Anda, silakan masukkan kata sandi saat ini dan tentukan kata sandi baru.
+                    @if(is_null(Auth::user()->password))
+                        Akun Anda terhubung melalui Google. Silakan atur kata sandi baru untuk mengaktifkan login manual di masa mendatang.
+                    @else
+                        Untuk keamanan akun Anda, silakan masukkan kata sandi saat ini dan tentukan kata sandi baru.
+                    @endif
                 </p>
             </div>
 
@@ -69,12 +78,14 @@
             <form action="{{ route('change-password') }}" method="POST" class="space-y-5">
                 @csrf
 
+                @if(!is_null(Auth::user()->password))
                 <!-- Current Password -->
                 <div class="flex flex-col space-y-1.5">
                     <label for="current_password" class="text-xs font-bold uppercase tracking-wider text-grey-text">Kata Sandi Saat Ini</label>
                     <input type="password" id="current_password" name="current_password" required placeholder="••••••••"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
                 </div>
+                @endif
 
                 <!-- New Password -->
                 <div class="flex flex-col space-y-1.5">
@@ -92,7 +103,11 @@
 
                 <!-- Submit Button -->
                 <button type="submit" class="w-full py-4 px-6 rounded-full bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-sm font-bold text-white-pure">
-                    Simpan Kata Sandi
+                    @if(is_null(Auth::user()->password))
+                        Atur Kata Sandi
+                    @else
+                        Simpan Kata Sandi
+                    @endif
                 </button>
             </form>
         </div>

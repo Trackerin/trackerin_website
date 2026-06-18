@@ -11,8 +11,10 @@ class TrackerinDashboard {
                 name: 'User',
                 email: '',
                 profile_image: null,
-                occupation: localStorage.getItem('user_occupation') || 'Pendidikan belum diatur',
-                specialization: localStorage.getItem('user_specialization') || 'Minat belum diatur'
+                last_login_at: null,
+                total_study_time: 0,
+                current_streak: 0,
+                weekly_activity: null
             },
             curriculums: [],
             activeCurriculum: null,
@@ -26,10 +28,6 @@ class TrackerinDashboard {
     }
 
     async init() {
-        // Setup initial UI states, local streak, and active dates
-        this.updateStreakAndActiveDays();
-        this.checkAndResetWeeklyActivity();
-        
         // Setup Event Listeners first (immediate navigation responsiveness)
         this.setupNavigation();
         this.setupTodoListeners();
@@ -87,94 +85,7 @@ class TrackerinDashboard {
         }
     }
 
-    // ==========================================
-    // STREAK & LOCAL ACTIVITY LOGIC (1-to-1 with Mobile)
-    // ==========================================
-    updateStreakAndActiveDays() {
-        const todayStr = this.getTodayDateString();
-        const lastActive = localStorage.getItem('last_active_date');
-        let activeDates = JSON.parse(localStorage.getItem('active_dates') || '[]');
-        
-        // Initialize today's weekday activity to 0f if not set
-        const dayOfWeekStr = this.getTodayWeekdayString();
-        const key = `activity_${dayOfWeekStr}`;
-        if (localStorage.getItem(key) === null) {
-            localStorage.setItem(key, '0');
-        }
-
-        if (!activeDates.includes(todayStr)) {
-            activeDates.push(todayStr);
-            localStorage.setItem('active_dates', JSON.stringify(activeDates));
-        }
-
-        if (!lastActive) {
-            localStorage.setItem('current_streak', '1');
-            localStorage.setItem('last_active_date', todayStr);
-            return;
-        }
-
-        if (lastActive === todayStr) {
-            return;
-        }
-
-        const yesterdayStr = this.getYesterdayDateString();
-        if (lastActive === yesterdayStr) {
-            const currentStreak = parseInt(localStorage.getItem('current_streak') || '0', 10);
-            localStorage.setItem('current_streak', (currentStreak + 1).toString());
-        } else {
-            localStorage.setItem('current_streak', '1');
-        }
-        localStorage.setItem('last_active_date', todayStr);
-    }
-
-    checkAndResetWeeklyActivity() {
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentWeek = this.getWeekNumber(today);
-        
-        const storedWeek = parseInt(localStorage.getItem('stored_week_of_year') || '-1', 10);
-        const storedYear = parseInt(localStorage.getItem('stored_year') || '-1', 10);
-
-        if (storedWeek !== currentWeek || storedYear !== currentYear) {
-            localStorage.setItem('stored_week_of_year', currentWeek.toString());
-            localStorage.setItem('stored_year', currentYear.toString());
-            
-            // Set all weekdays to -1 (unset/inactive)
-            const weekdays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-            weekdays.forEach(day => {
-                localStorage.setItem(`activity_${day}`, '-1');
-            });
-        }
-    }
-
-    incrementDailyActivity(amount = 20) {
-        this.checkAndResetWeeklyActivity();
-        const dayOfWeekStr = this.getTodayWeekdayString();
-        const key = `activity_${dayOfWeekStr}`;
-        
-        const current = parseFloat(localStorage.getItem(key) || '-1');
-        const base = current < 0 ? 0 : current;
-        const newValue = Math.min(base + amount, 100);
-        
-        localStorage.setItem(key, newValue.toString());
-        this.renderWeeklyChart();
-    }
-
-    getDailyActivity(day) {
-        this.checkAndResetWeeklyActivity();
-        
-        const weekdays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-        const currentDayStr = this.getTodayWeekdayString();
-        const currentDayIndex = weekdays.indexOf(currentDayStr);
-        const targetDayIndex = weekdays.indexOf(day);
-
-        // Future day: inactive
-        if (targetDayIndex > currentDayIndex) {
-            return -1;
-        }
-
-        return parseFloat(localStorage.getItem(`activity_${day}`) || '-1');
-    }
+    // (Local storage tracking methods removed as they are now handled by the backend)
 
     // ==========================================
     // CORE FETCHING
@@ -183,9 +94,7 @@ class TrackerinDashboard {
         try {
             const res = await this.apiCall('/api/v1/user');
             if (res.data) {
-                this.state.user.name = res.data.name;
-                this.state.user.email = res.data.email;
-                this.state.user.profile_image = res.data.profile_image;
+                this.state.user = { ...this.state.user, ...res.data };
             }
         } catch (e) {
             this.showToast('Gagal memuat profil user', 'error');
@@ -421,19 +330,11 @@ class TrackerinDashboard {
                 e.preventDefault();
                 const name = document.getElementById('profile-name-input').value.trim();
                 const email = document.getElementById('profile-email-input').value.trim();
-                const occ = document.getElementById('profile-occ-input').value.trim();
-                const spec = document.getElementById('profile-spec-input').value.trim();
 
                 try {
                     const payload = { name, email };
 
                     await this.apiCall('/api/v1/user', 'PUT', payload);
-                    
-                    // Save custom occupation and specialization locally (localStorage)
-                    localStorage.setItem('user_occupation', occ);
-                    localStorage.setItem('user_specialization', spec);
-                    this.state.user.occupation = occ;
-                    this.state.user.specialization = spec;
 
                     await this.fetchUser();
                     this.renderProfileHeader();
@@ -586,11 +487,24 @@ class TrackerinDashboard {
         }, 0);
 
         const completedTasks = this.state.todos.filter(t => t.is_done).length;
-        const totalHours = (completedMilestones * 2.0) + (completedTasks * 0.5);
 
-        const currentStreak = localStorage.getItem('current_streak') || '1';
-        const activeDates = JSON.parse(localStorage.getItem('active_dates') || '[]');
-        const daysActive = activeDates.length || 1;
+        // Compute study time dynamically
+        let totalSeconds = this.state.user.total_study_time || 0;
+        if (this.state.user.last_login_at) {
+            const loginTime = new Date(this.state.user.last_login_at);
+            const elapsed = Math.floor((new Date() - loginTime) / 1000);
+            if (elapsed > 0) {
+                totalSeconds += elapsed;
+            }
+        }
+        const totalHours = totalSeconds / 3600;
+
+        const currentStreak = this.state.user.current_streak || 0;
+        
+        // Calculate days active from the weekly activity log
+        const weekly = this.state.user.weekly_activity || {};
+        const activeDaysInWeek = Object.keys(weekly).filter(day => day !== 'year' && day !== 'week' && weekly[day] >= 0).length;
+        const daysActive = activeDaysInWeek || 1;
 
         // Render Stats values
         const completedMilestonesEl = document.getElementById('stat-completed-count');
@@ -705,6 +619,7 @@ class TrackerinDashboard {
     renderWeeklyChart() {
         const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
         const todayStr = this.getTodayWeekdayString();
+        const weeklyActivity = this.state.user.weekly_activity || {};
         
         days.forEach(day => {
             const bar = document.getElementById(`chart-bar-${day}`);
@@ -712,7 +627,7 @@ class TrackerinDashboard {
             const textEl = document.getElementById(`chart-text-${day}`);
 
             if (bar) {
-                const activityVal = this.getDailyActivity(day);
+                const activityVal = weeklyActivity[day] !== undefined ? parseFloat(weeklyActivity[day]) : -1;
                 const showVal = activityVal < 0 ? 0 : activityVal;
                 
                 // Set height (using percent of 120px)
@@ -858,11 +773,8 @@ class TrackerinDashboard {
                                         <!-- Actions Row -->
                                         <div class="flex flex-wrap gap-4 items-center justify-between">
                                             <div class="flex gap-2">
-                                                <button onclick="window.trackerinDashboard.openQuiz(${m.id})" class="px-4 py-2 rounded-full border border-main-blue hover:bg-main-blue hover:text-white-pure active:scale-[0.98] transition-all duration-300 text-xs font-bold text-main-blue">
-                                                    Evaluasi Kuis AI
-                                                </button>
-                                                <button onclick="window.trackerinDashboard.toggleNotesForm(${m.id})" class="px-4 py-2 rounded-full border border-dark-text/10 hover:border-dark-text/80 active:scale-[0.98] transition-all duration-300 text-xs font-bold text-dark-text bg-white-pure">
-                                                    Catatan Belajar
+                                                <button onclick="window.trackerinDashboard.openQuiz(${m.id}, ${m.is_completed})" class="px-4 py-2 rounded-full border border-main-blue hover:bg-main-blue hover:text-white-pure active:scale-[0.98] transition-all duration-300 text-xs font-bold text-main-blue">
+                                                    ${m.is_completed ? 'Tinjau Kuis' : 'Evaluasi Kuis AI'}
                                                 </button>
                                             </div>
                                             
@@ -872,18 +784,6 @@ class TrackerinDashboard {
                                                 </button>
                                             ` : ''}
                                         </div>
-
-                                        <!-- Milestone Study Notes Form -->
-                                        <div id="notes-form-container-${m.id}" class="hidden bg-white-pure p-4 rounded-xl border border-dark-text/5 space-y-3">
-                                            <div class="flex justify-between items-center text-xs">
-                                                <span class="font-bold text-dark-text uppercase tracking-wider">Catatan Saya</span>
-                                                <span id="notes-save-status-${m.id}" class="text-[10px] text-grey-text font-medium">Semua catatan tersimpan secara otomatis</span>
-                                            </div>
-                                            <textarea id="milestone-notes-textarea-${m.id}" rows="4" 
-                                                      class="w-full bg-white-bg/40 border border-dark-text/10 focus:border-main-blue text-dark-text rounded-xl p-3 outline-none text-xs font-medium resize-none placeholder:text-grey-text transition-all duration-300"
-                                                      placeholder="Ketik catatan belajar Anda di sini..."
-                                                      oninput="window.trackerinDashboard.autoSaveNote(${m.id})"></textarea>
-                                        </div>
                                     </div>
                                 ` : ''}
                             </div>
@@ -892,18 +792,7 @@ class TrackerinDashboard {
                 </div>
             `;
             
-            // Load and pre-fill note contents for expanded states
-            c.milestones.forEach(async m => {
-                const notesTextarea = document.getElementById(`milestone-notes-textarea-${m.id}`);
-                if (notesTextarea) {
-                    try {
-                        const notesData = await this.apiCall(`/api/v1/notes?milestone_id=${m.id}`);
-                        if (notesData.data && notesData.data.length > 0) {
-                            notesTextarea.value = notesData.data[0].content || '';
-                        }
-                    } catch (e) {}
-                }
-            });
+
 
         } catch (e) {
             this.showToast('Gagal memuat detail kurikulum', 'error');
@@ -940,12 +829,10 @@ class TrackerinDashboard {
 
     async completeMilestoneManual(id) {
         try {
-            await this.apiCall(`/api/v1/milestones/${id}/complete`, 'PUT');
+            await this.apiCall(`/api/v1/milestones/${id}/complete`, 'PUT', { is_completed: true });
             this.showToast('Milestone berhasil diselesaikan!', 'success');
             
-            // Increment progress tracker activity
-            this.incrementDailyActivity(20);
-            
+            await this.fetchUser();
             await this.fetchCurriculums();
             this.renderStats();
             this.renderActivePath();
@@ -955,51 +842,35 @@ class TrackerinDashboard {
         }
     }
 
-    toggleNotesForm(id) {
-        const container = document.getElementById(`notes-form-container-${id}`);
-        if (container.classList.contains('hidden')) {
-            container.classList.remove('hidden');
-        } else {
-            container.classList.add('hidden');
-        }
-    }
 
-    autoSaveNote(milestoneId) {
-        const statusEl = document.getElementById(`notes-save-status-${milestoneId}`);
-        const textarea = document.getElementById(`milestone-notes-textarea-${milestoneId}`);
-        const content = textarea.value;
-
-        if (statusEl) statusEl.innerText = "Menyimpan...";
-
-        // Debounce saving
-        clearTimeout(this[`noteTimeout_${milestoneId}`]);
-        this[`noteTimeout_${milestoneId}`] = setTimeout(async () => {
-            try {
-                // Determine whether to create or update notes
-                const notesData = await this.apiCall(`/api/v1/notes?milestone_id=${milestoneId}`);
-                if (notesData.data && notesData.data.length > 0) {
-                    const noteId = notesData.data[0].id;
-                    await this.apiCall(`/api/v1/notes/${noteId}`, 'PUT', { title: 'Study Note', content });
-                } else {
-                    await this.apiCall('/api/v1/notes', 'POST', { milestone_id: milestoneId, title: 'Study Note', content });
-                }
-                if (statusEl) statusEl.innerText = "Semua catatan tersimpan secara otomatis";
-            } catch (err) {
-                if (statusEl) statusEl.innerText = "Gagal menyimpan catatan";
-            }
-        }, 1000);
-    }
 
     // ==========================================
     // AI QUIZ SYSTEM
     // ==========================================
-    async openQuiz(milestoneId) {
-        const modal = document.getElementById('quiz-modal');
-        const container = document.getElementById('quiz-modal-content');
-        if (!modal || !container) return;
+    async openQuiz(milestoneId, isCompleted = false) {
+        // Hide other view panes and show view-quiz
+        document.querySelectorAll('.view-pane').forEach(v => v.classList.add('hidden'));
+        const quizView = document.getElementById('view-quiz');
+        if (quizView) {
+            quizView.classList.remove('hidden');
+            if (window.gsap) {
+                window.gsap.fromTo(quizView, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4 });
+            }
+        }
 
-        modal.classList.remove('hidden');
-        container.innerHTML = `<div class="text-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-main-blue mx-auto mb-4"></div><p class="text-xs text-grey-text font-medium">Asisten AI sedang menyiapkan pertanyaan kuis...</p></div>`;
+        // Deselect active nav links
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active-nav-link'));
+
+        const container = document.getElementById('quiz-pane-content');
+        if (!container) return;
+
+        container.innerHTML = `<div class="text-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-main-blue mx-auto mb-4"></div><p class="text-xs text-grey-text font-medium font-bold">Asisten AI sedang menyiapkan pertanyaan kuis...</p></div>`;
+
+        // Update titles
+        const paneTitle = document.getElementById('quiz-pane-title');
+        const paneSubtitle = document.getElementById('quiz-pane-subtitle');
+        if (paneTitle) paneTitle.innerText = isCompleted ? 'Tinjauan Kuis' : 'Evaluasi Kuis AI';
+        if (paneSubtitle) paneSubtitle.innerText = isCompleted ? 'Tinjau kembali pertanyaan dan jawaban kuis yang telah Anda selesaikan.' : 'Jawab ketiga pertanyaan kuis di bawah untuk menguji pemahaman konsep Anda.';
 
         try {
             const res = await this.apiCall(`/api/v1/milestones/${milestoneId}/generate-quiz`, 'POST');
@@ -1009,47 +880,81 @@ class TrackerinDashboard {
                 throw new Error("No questions available");
             }
 
-            container.innerHTML = `
-                <div class="mb-6">
-                    <h3 class="text-lg font-bold text-dark-text mb-1">${data.title || 'Evaluasi Milestone'}</h3>
-                    <p class="text-xs text-grey-text font-medium">Jawab ketiga pertanyaan kuis di bawah untuk menguji pemahaman konsep Anda.</p>
-                </div>
-                
-                <form id="quiz-submission-form" onsubmit="window.trackerinDashboard.submitQuiz(event, ${milestoneId})">
-                    <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+            this.state.currentQuizAnswers = data.questions.map(q => q.correct_answer);
+            this.state.currentQuizCompleted = isCompleted;
+
+            if (isCompleted) {
+                // Review Mode rendering
+                container.innerHTML = `
+                    <div class="space-y-6">
                         ${data.questions.map((q, qIndex) => `
-                            <div class="p-4 bg-white-bg/40 border border-dark-text/5 rounded-2xl">
+                            <div class="p-5 bg-white-bg/40 border border-dark-text/5 rounded-2xl">
                                 <h4 class="text-sm font-bold text-dark-text mb-3 leading-relaxed">${qIndex + 1}. ${q.question}</h4>
                                 <div class="space-y-2.5">
-                                    ${q.options.map((option, oIndex) => `
-                                        <label class="flex items-center space-x-3 p-3 rounded-xl border border-dark-text/5 bg-white-pure hover:bg-main-blue/5 cursor-pointer transition-all duration-200">
-                                            <input type="radio" required name="question-${qIndex}" value="${option}"
-                                                   class="w-4 h-4 text-main-blue border-dark-text/10 focus:ring-main-blue">
-                                            <span class="text-xs font-semibold text-dark-text">${option}</span>
-                                        </label>
-                                    `).join('')}
+                                    ${q.options.map((option, oIndex) => {
+                                        const isCorrect = option === q.correct_answer;
+                                        return `
+                                            <div class="flex items-center justify-between p-3.5 rounded-xl border ${isCorrect ? 'border-green-500 bg-green-500/10' : 'border-dark-text/5 bg-white-pure'}">
+                                                <div class="flex items-center space-x-3">
+                                                    <input type="radio" disabled ${isCorrect ? 'checked' : ''} class="w-4 h-4 text-green-500 border-green-500 bg-green-500">
+                                                    <span class="text-xs font-semibold ${isCorrect ? 'text-green-800' : 'text-dark-text'}">${option}</span>
+                                                </div>
+                                                ${isCorrect ? `
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-200 text-green-800 space-x-1 shrink-0">
+                                                        <svg class="w-3 h-3 text-green-800 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                                        <span>Jawaban Benar</span>
+                                                    </span>
+                                                ` : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
                                 </div>
                             </div>
                         `).join('')}
                     </div>
 
                     <div class="mt-8 flex justify-end gap-3 border-t border-dark-text/5 pt-4">
-                        <button type="button" onclick="window.trackerinDashboard.closeQuiz()" class="px-6 py-3 border border-dark-text/10 hover:bg-white-bg text-xs font-bold text-dark-text rounded-full transition-all duration-200">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-6 py-3 bg-main-blue hover:bg-hover-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
-                            Kirim Jawaban
+                        <button type="button" onclick="window.trackerinDashboard.backToRoadmapDetailsFromQuiz()" class="px-8 py-3 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
+                            Kembali ke Detail Roadmap
                         </button>
                     </div>
-                </form>
-            `;
+                `;
+            } else {
+                // Test Mode rendering
+                container.innerHTML = `
+                    <form id="quiz-submission-form" onsubmit="window.trackerinDashboard.submitQuiz(event, ${milestoneId})">
+                        <div class="space-y-6">
+                            ${data.questions.map((q, qIndex) => `
+                                <div class="p-5 bg-white-bg/40 border border-dark-text/5 rounded-2xl">
+                                    <h4 class="text-sm font-bold text-dark-text mb-3 leading-relaxed">${qIndex + 1}. ${q.question}</h4>
+                                    <div class="space-y-2.5">
+                                        ${q.options.map((option, oIndex) => `
+                                            <label class="flex items-center space-x-3 p-3.5 rounded-xl border border-dark-text/5 bg-white-pure hover:bg-main-blue/5 cursor-pointer transition-all duration-200">
+                                                <input type="radio" required name="question-${qIndex}" value="${option}"
+                                                       class="w-4 h-4 text-main-blue border-dark-text/10 focus:ring-main-blue">
+                                                <span class="text-xs font-semibold text-dark-text">${option}</span>
+                                            </label>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
 
-            // Keep correct answers stored in state to calculate score
-            this.state.currentQuizAnswers = data.questions.map(q => q.correct_answer);
+                        <div class="mt-8 flex justify-end gap-3 border-t border-dark-text/5 pt-4">
+                            <button type="button" onclick="window.trackerinDashboard.backToRoadmapDetailsFromQuiz()" class="px-6 py-3 border border-dark-text/10 hover:bg-white-bg text-xs font-bold text-dark-text rounded-full transition-all duration-200">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-6 py-3 bg-main-blue hover:bg-hover-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
+                                Kirim Jawaban
+                            </button>
+                        </div>
+                    </form>
+                `;
+            }
 
         } catch (e) {
             this.showToast('Gagal memuat kuis dari AI', 'error');
-            this.closeQuiz();
+            this.backToRoadmapDetailsFromQuiz();
         }
     }
 
@@ -1070,31 +975,31 @@ class TrackerinDashboard {
 
         const score = Math.round((scoreCount / correctAnswers.length) * 100);
         
-        // Render score overlay popup
-        const container = document.getElementById('quiz-modal-content');
-        container.innerHTML = `
-            <div class="text-center py-8 flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6 ${scoreCount >= 2 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
-                    ${scoreCount >= 2 ? `
-                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    ` : `
-                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                    `}
+        // Render score inside pane
+        const container = document.getElementById('quiz-pane-content');
+        if (container) {
+            container.innerHTML = `
+                <div class="text-center py-8 flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6 ${scoreCount >= 2 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                        ${scoreCount >= 2 ? `
+                            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        ` : `
+                            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        `}
+                    </div>
+                    <h3 class="text-lg font-bold text-dark-text mb-2">${scoreCount >= 2 ? 'Selamat! Evaluasi Lulus 🎉' : 'Sayang Sekali, Evaluasi Gagal'}</h3>
+                    <p class="text-xs text-grey-text font-medium mb-1">Skor Kuis Anda: <span class="font-bold text-dark-text">${score}%</span></p>
+                    <p class="text-[11px] text-grey-text font-medium max-w-sm mb-6">${scoreCount >= 2 ? 'Anda memahami topik ini dengan sangat baik. Milestone telah dicentang otomatis.' : 'Anda butuh setidaknya 2 jawaban benar untuk lulus. Silakan pelajari ulang catatan dan ulangi kuis.'}</p>
+                    
+                    <button onclick="window.trackerinDashboard.finishQuizResult(${scoreCount}, ${milestoneId})" class="px-8 py-3 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
+                        Selesai
+                    </button>
                 </div>
-                <h3 class="text-lg font-bold text-dark-text mb-2">${scoreCount >= 2 ? 'Selamat! Evaluasi Lulus 🎉' : 'Sayang Sekali, Evaluasi Gagal'}</h3>
-                <p class="text-xs text-grey-text font-medium mb-1">Skor Kuis Anda: <span class="font-bold text-dark-text">${score}%</span></p>
-                <p class="text-[11px] text-grey-text font-medium max-w-sm mb-6">${scoreCount >= 2 ? 'Anda memahami topik ini dengan sangat baik. Milestone telah dicentang otomatis.' : 'Anda butuh setidaknya 2 jawaban benar untuk lulus. Silakan pelajari ulang catatan dan ulangi kuis.'}</p>
-                
-                <button onclick="window.trackerinDashboard.finishQuizResult(${scoreCount}, ${milestoneId})" class="px-8 py-3 bg-dark-text hover:bg-main-blue active:scale-[0.98] transition-all duration-300 text-xs font-bold text-white-pure rounded-full">
-                    Selesai
-                </button>
-            </div>
-        `;
+            `;
+        }
     }
 
     async finishQuizResult(score, milestoneId) {
-        this.closeQuiz();
-        
         try {
             await this.apiCall(`/api/v1/milestones/${milestoneId}/quiz/submit`, 'POST', { score });
             
@@ -1104,13 +1009,36 @@ class TrackerinDashboard {
             }
         } catch (e) {
             console.error('Failed to submit score to server');
+        } finally {
+            this.backToRoadmapDetailsFromQuiz();
         }
     }
 
-    closeQuiz() {
-        const modal = document.getElementById('quiz-modal');
-        if (modal) modal.classList.add('hidden');
+    backToRoadmapDetailsFromQuiz() {
         this.state.currentQuizAnswers = null;
+        this.state.currentQuizCompleted = null;
+
+        // Hide view-quiz and show view-roadmaps
+        document.querySelectorAll('.view-pane').forEach(v => v.classList.add('hidden'));
+        const roadmapsView = document.getElementById('view-roadmaps');
+        if (roadmapsView) {
+            roadmapsView.classList.remove('hidden');
+            if (window.gsap) {
+                window.gsap.fromTo(roadmapsView, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4 });
+            }
+        }
+
+        // Activate "My Roadmaps" nav link
+        document.querySelectorAll('.nav-link').forEach(n => {
+            if (n.getAttribute('data-view') === 'view-roadmaps') {
+                n.classList.add('active-nav-link');
+            } else {
+                n.classList.remove('active-nav-link');
+            }
+        });
+
+        // Re-render roadmaps (will show roadmap details since activeRoadmapId is still set)
+        this.renderRoadmaps();
     }
 
     // ==========================================
@@ -1128,20 +1056,14 @@ class TrackerinDashboard {
         const emailInputs = document.getElementById('profile-email-input');
         if (emailInputs) emailInputs.value = this.state.user.email;
 
-        const occInputs = document.getElementById('profile-occ-input');
-        if (occInputs) occInputs.value = this.state.user.occupation;
+        const sidebarNameEl = document.getElementById('sidebar-user-name');
+        if (sidebarNameEl) sidebarNameEl.innerText = this.state.user.name;
 
-        const specInputs = document.getElementById('profile-spec-input');
-        if (specInputs) specInputs.value = this.state.user.specialization;
+        const profileNameEl = document.getElementById('profile-user-name');
+        if (profileNameEl) profileNameEl.innerText = this.state.user.name;
 
-        const titleEl = document.getElementById('profile-header-name');
-        if (titleEl) titleEl.innerText = this.state.user.name;
-
-        const occEl = document.getElementById('profile-header-occupation');
-        if (occEl) occEl.innerText = this.state.user.occupation;
-
-        const specEl = document.getElementById('profile-header-specialization');
-        if (specEl) specEl.innerText = this.state.user.specialization;
+        const greetingEl = document.getElementById('dashboard-user-greeting');
+        if (greetingEl) greetingEl.innerText = this.state.user.name;
 
         // Render avatars dynamically
         this.renderProfileAvatars();

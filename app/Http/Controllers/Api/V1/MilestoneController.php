@@ -45,6 +45,8 @@ class MilestoneController extends Controller
 
             // Add notifications if marked as completed
             if ($isCompleted) {
+                $request->user()->incrementDailyActivity(20);
+
                 $request->user()->notifications()->create([
                     'title' => 'Milestone Selesai! 🎉',
                     'message' => 'Selamat! Kamu telah menyelesaikan milestone "' . $milestone->title . '" dalam kurikulum "' . $curriculum->topic . '".',

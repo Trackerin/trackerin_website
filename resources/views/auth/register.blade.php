@@ -43,6 +43,16 @@
                 </p>
             </div>
 
+            @if($errors->any())
+                <div class="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-semibold">
+                    <ul class="list-disc pl-5 space-y-1 text-left">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Form -->
             <form id="register-form" action="{{ route('register') }}" method="POST" class="space-y-5">
                 @csrf
@@ -126,12 +136,12 @@
                     <div class="flex flex-col space-y-2">
                         <label class="text-xs font-bold uppercase tracking-wider text-grey-text text-left">Kode OTP</label>
                         <div class="flex justify-between gap-2" id="otp-inputs">
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
-                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" required />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
+                            <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-11 h-11 text-center text-xl font-bold bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl transition-all duration-300 outline-none" />
                         </div>
                         <!-- Hidden input to store full 6-digit OTP -->
                         <input type="hidden" id="otp" name="otp" />

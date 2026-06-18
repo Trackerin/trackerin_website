@@ -40,6 +40,9 @@ class WebAuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+            $user->update(['last_login_at' => now()]);
+
             return redirect()->intended('/dashboard');
         }
 
@@ -116,6 +119,7 @@ class WebAuthController extends Controller
         });
 
         Auth::login($user);
+        $user->update(['last_login_at' => now()]);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -174,6 +178,14 @@ class WebAuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        if ($user && $user->last_login_at) {
+            $diffInSeconds = now()->diffInSeconds($user->last_login_at);
+            $user->total_study_time += $diffInSeconds;
+            $user->last_login_at = null;
+            $user->save();
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

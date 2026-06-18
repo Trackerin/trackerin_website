@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard - Trackerin</title>
     
-    <!-- CSRF Token for Secure AJAX API calls -->
+    <!-- CSRF Token for Secure AJAX AJAX API calls -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ Auth::id() }}">
 
     <!-- Styles & Scripts compiled by Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dashboard.js'])
@@ -95,8 +96,7 @@
                     </div>
                 </div>
                 <div class="min-w-0">
-                    <h4 class="text-xs font-bold text-dark-text truncate" id="profile-header-name">{{ Auth::user()->name }}</h4>
-                    <p class="text-[10px] text-grey-text font-bold truncate mt-0.5" id="profile-header-occupation">Loading...</p>
+                    <h4 class="text-xs font-bold text-dark-text truncate" id="sidebar-user-name">{{ Auth::user()->name }}</h4>
                 </div>
             </div>
 
@@ -357,28 +357,28 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl" id="explore-suggestions-container">
                     <!-- Suggestion 1 -->
-                    <div onclick="document.getElementById('explore-search-input').value = 'Dasar Pemrograman Python'; document.getElementById('ai-generate-form').dispatchEvent(new Event('submit'));"
+                    <div onclick="document.getElementById('explore-search-input').value = 'Dasar Pemrograman Python'; document.getElementById('explore-search-input').focus();"
                          class="explore-suggested-card p-5 bg-white-pure/60 border border-dark-text/5 rounded-2xl hover:bg-main-blue/5 hover:translate-y-[-2px] transition-all duration-300 cursor-pointer text-left">
                         <h4 class="suggested-title text-sm font-bold text-dark-text mb-1">Dasar Python</h4>
                         <p class="text-[10px] text-grey-text font-medium leading-relaxed">Fundamental pemrograman, tipe data, kontrol alur, dan fungsi.</p>
                     </div>
 
                     <!-- Suggestion 2 -->
-                    <div onclick="document.getElementById('explore-search-input').value = 'Figma UI/UX Design'; document.getElementById('ai-generate-form').dispatchEvent(new Event('submit'));"
+                    <div onclick="document.getElementById('explore-search-input').value = 'Figma UI/UX Design'; document.getElementById('explore-search-input').focus();"
                          class="explore-suggested-card p-5 bg-white-pure/60 border border-dark-text/5 rounded-2xl hover:bg-main-blue/5 hover:translate-y-[-2px] transition-all duration-300 cursor-pointer text-left">
                         <h4 class="suggested-title text-sm font-bold text-dark-text mb-1">UI/UX Design</h4>
                         <p class="text-[10px] text-grey-text font-medium leading-relaxed">Pengenalan Figma, prototyping, wireframe, dan design system.</p>
                     </div>
 
                     <!-- Suggestion 3 -->
-                    <div onclick="document.getElementById('explore-search-input').value = 'Belajar RESTful API Laravel'; document.getElementById('ai-generate-form').dispatchEvent(new Event('submit'));"
+                    <div onclick="document.getElementById('explore-search-input').value = 'Belajar RESTful API Laravel'; document.getElementById('explore-search-input').focus();"
                          class="explore-suggested-card p-5 bg-white-pure/60 border border-dark-text/5 rounded-2xl hover:bg-main-blue/5 hover:translate-y-[-2px] transition-all duration-300 cursor-pointer text-left">
                         <h4 class="suggested-title text-sm font-bold text-dark-text mb-1">Laravel RESTful API</h4>
                         <p class="text-[10px] text-grey-text font-medium leading-relaxed">Routing, Controller, Eloquent ORM, dan otentikasi Sanctum.</p>
                     </div>
 
                     <!-- Suggestion 4 -->
-                    <div onclick="document.getElementById('explore-search-input').value = 'Project Management Agile'; document.getElementById('ai-generate-form').dispatchEvent(new Event('submit'));"
+                    <div onclick="document.getElementById('explore-search-input').value = 'Project Management Agile'; document.getElementById('explore-search-input').focus();"
                          class="explore-suggested-card p-5 bg-white-pure/60 border border-dark-text/5 rounded-2xl hover:bg-main-blue/5 hover:translate-y-[-2px] transition-all duration-300 cursor-pointer text-left">
                         <h4 class="suggested-title text-sm font-bold text-dark-text mb-1">Agile Scrum</h4>
                         <p class="text-[10px] text-grey-text font-medium leading-relaxed">Siklus sprint, backlog product, standup, dan scrum roles.</p>
@@ -554,9 +554,7 @@
                                 </div>
                             </div>
                             <div class="min-w-0">
-                                <h3 class="text-base font-bold text-dark-text truncate" id="profile-header-name">{{ Auth::user()->name }}</h3>
-                                <p class="text-xs text-grey-text font-semibold truncate mt-0.5" id="profile-header-occupation">Loading...</p>
-                                <p class="text-[11px] text-main-blue font-bold truncate mt-0.5" id="profile-header-specialization">Loading...</p>
+                                <h3 class="text-base font-bold text-dark-text truncate" id="profile-user-name">{{ Auth::user()->name }}</h3>
                             </div>
                         </div>
 
@@ -571,18 +569,6 @@
                                 <div class="flex flex-col space-y-1.5">
                                     <label for="profile-email-input" class="text-xs font-bold uppercase tracking-wider text-grey-text">Email</label>
                                     <input type="email" id="profile-email-input" required
-                                           class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="flex flex-col space-y-1.5">
-                                    <label for="profile-occ-input" class="text-xs font-bold uppercase tracking-wider text-grey-text">Pekerjaan/Status</label>
-                                    <input type="text" id="profile-occ-input" placeholder="Misal: Mahasiswa Semester 4"
-                                           class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
-                                </div>
-                                <div class="flex flex-col space-y-1.5">
-                                    <label for="profile-spec-input" class="text-xs font-bold uppercase tracking-wider text-grey-text">Spesialisasi/Minat</label>
-                                    <input type="text" id="profile-spec-input" placeholder="Misal: Fullstack Developer"
                                            class="bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all duration-300">
                                 </div>
                             </div>
@@ -626,23 +612,30 @@
 
             </div>
         </section>
+
+        <!-- ==========================================
+             TAB 7: VIEW QUIZ (SPA PANE)
+             ========================================== -->
+        <section id="view-quiz" class="view-pane hidden space-y-6">
+            <div class="flex items-center gap-3 mb-6">
+                <button onclick="window.trackerinDashboard.backToRoadmapDetailsFromQuiz()" class="p-2 text-grey-text hover:text-dark-text hover:bg-white-bg rounded-full transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                </button>
+                <div>
+                    <h2 class="text-xl font-bold text-dark-text" id="quiz-pane-title">Evaluasi Kuis AI</h2>
+                    <p class="text-xs text-grey-text font-semibold mt-0.5" id="quiz-pane-subtitle">Jawab kuis di bawah untuk menguji pemahaman Anda.</p>
+                </div>
+            </div>
+
+            <div class="gradient-border-card p-6 md:p-8 shadow-sm bg-white-pure border border-dark-text/5 max-w-4xl" id="quiz-pane-content">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
     </main>
 
     <!-- ==========================================
          FULL PAGE POPUPS / OVERLAYS
          ========================================== -->
-         
-    <!-- 1. AI QUIZ MODAL -->
-    <div id="quiz-modal" class="hidden fixed inset-0 z-50 bg-dark-text/30 backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="w-full max-w-2xl bg-white-pure rounded-3xl border border-dark-text/5 shadow-2xl p-6 sm:p-8 relative">
-            <button onclick="window.trackerinDashboard.closeQuiz()" class="absolute top-6 right-6 p-2 text-grey-text hover:text-dark-text hover:bg-white-bg rounded-full transition-all duration-200">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-            <div id="quiz-modal-content">
-                <!-- Loaded dynamically -->
-            </div>
-        </div>
-    </div>
 
     <!-- 2. AI GENERATE LOADER OVERLAY -->
     <div id="ai-generation-loader" class="hidden fixed inset-0 z-50 bg-white-pure flex flex-col items-center justify-center p-8">

@@ -49,6 +49,16 @@
                 </div>
             @endif
 
+            @if($errors->any())
+                <div class="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-semibold">
+                    <ul class="list-disc pl-5 space-y-1 text-left">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Form -->
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf
@@ -58,6 +68,9 @@
                     <label for="email" class="text-xs font-bold uppercase tracking-wider text-grey-text">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="name@example.com"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
+                    @error('email')
+                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <!-- Password Input -->
@@ -67,8 +80,9 @@
                     </div>
                     <input type="password" id="password" name="password" required placeholder="••••••••"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
-                        @error('email') <span class="text-xs font-semibold text-red-500 mt-1">Email atau kata sandi yang kamu masukkan salah!</span>
-                        @enderror
+                    @error('password')
+                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <!-- Remember Me & Forgot Password -->

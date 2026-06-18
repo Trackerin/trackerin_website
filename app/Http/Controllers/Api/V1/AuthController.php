@@ -73,6 +73,7 @@ class AuthController extends Controller
         });
 
         // Create Sanctum Token
+        $user->update(['last_login_at' => now()]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -242,6 +243,7 @@ class AuthController extends Controller
             ]);
         }
 
+        $user->update(['last_login_at' => now()]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -257,8 +259,11 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
+        $user = $request->user();
+        $user->syncStreakAndActivity();
+
         return response()->json([
-            'data' => $request->user()
+            'data' => $user
         ]);
     }
 
@@ -267,7 +272,15 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        if ($user && $user->last_login_at) {
+            $diffInSeconds = now()->diffInSeconds($user->last_login_at);
+            $user->total_study_time += $diffInSeconds;
+            $user->last_login_at = null;
+            $user->save();
+        }
+
+        $user->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Token successfully revoked'
@@ -325,6 +338,7 @@ class AuthController extends Controller
                     ]);
                 }
 
+                $user->update(['last_login_at' => now()]);
                 $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json([
@@ -389,6 +403,7 @@ class AuthController extends Controller
                 ]);
             }
 
+            $user->update(['last_login_at' => now()]);
             Auth::login($user, remember: true);
 
             return redirect()->intended('/dashboard');
