@@ -801,7 +801,29 @@ class TrackerinDashboard {
     }
 
     selectRoadmap(id) {
+        console.log('selectRoadmap called with id:', id);
         this.state.activeRoadmapId = id;
+
+        // Hide all view panes and show roadmaps view
+        document.querySelectorAll('.view-pane').forEach(v => v.classList.add('hidden'));
+        const roadmapsView = document.getElementById('view-roadmaps');
+        if (roadmapsView) {
+            roadmapsView.classList.remove('hidden');
+            if (window.gsap) {
+                window.gsap.fromTo(roadmapsView, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4 });
+            }
+        }
+
+        // Activate My Roadmaps nav link
+        document.querySelectorAll('.nav-link').forEach(n => {
+            if (n.getAttribute('data-view') === 'view-roadmaps') {
+                n.classList.add('active-nav-link');
+            } else {
+                n.classList.remove('active-nav-link');
+            }
+        });
+
+        // Render roadmaps with details
         this.renderRoadmaps();
     }
 
