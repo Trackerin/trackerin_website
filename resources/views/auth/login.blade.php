@@ -69,7 +69,7 @@
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="name@example.com"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
                     @error('email')
-                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ $message }}</span>
+                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ Email yang dimasukkan salah!}}</span>
                     @enderror
                 </div>
 
@@ -81,7 +81,7 @@
                     <input type="password" id="password" name="password" required placeholder="••••••••"
                         class="w-full bg-white-bg border border-dark-text/10 text-dark-text focus:border-main-blue/80 focus:ring-1 focus:ring-main-blue/80 rounded-xl px-4 py-3 placeholder:text-grey-text transition-all duration-300 outline-none text-sm font-medium">
                     @error('password')
-                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ $message }}</span>
+                        <span class="text-xs font-semibold text-red-500 mt-1 text-left">{{ Email yang dimasukkan salah }}</span>
                     @enderror
                 </div>
 
