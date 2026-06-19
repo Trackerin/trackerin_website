@@ -107,9 +107,9 @@
             <!-- Body -->
             <div class="email-body">
                 @if($type === 'register')
-                    <h2>Verifikasi Email Pendaftaran Anda</h2>
+                    <h2>Verifikasi Email Anda</h2>
                     <p>Halo,</p>
-                    <p>Terima kasih telah melakukan pendaftaran di <strong>Trackerin</strong>. Untuk menyelesaikan pendaftaran dan mengaktifkan akun Anda, silakan gunakan kode OTP (One-Time Password) berikut:</p>
+                    <p>Terima kasih telah mendaftarkan akun di <strong>Trackerin</strong>. Untuk menyelesaikan pendaftaran dan mengaktifkan akun Anda, silakan gunakan kode OTP berikut:</p>
                 @else
                     <h2>Permintaan Atur Ulang Kata Sandi</h2>
                     <p>Halo,</p>
@@ -123,10 +123,10 @@
                 </div>
 
                 <div class="warning-text">
-                    <strong>PENTING:</strong> Kode ini hanya berlaku selama <strong>15 menit</strong> sejak email ini dikirimkan. Demi keamanan akun Anda, mohon untuk tidak membagikan kode OTP ini kepada siapa pun.
+                    <strong>PERHATIAN:</strong> Kode ini hanya berlaku selama <strong>15 menit</strong> sejak email ini dikirimkan. Demi keamanan akun Anda, mohon untuk tidak membagikan kode OTP ini kepada siapa pun.
                 </div>
 
-                <p>Jika Anda tidak merasa melakukan tindakan ini, Anda dapat mengabaikan email ini dengan aman.</p>
+                <p>Jika Anda tidak merasa melakukan tindakan ini, Anda dapat mengabaikan email ini.</p>
                 
                 <p>Salam hangat,<br><strong>Tim Trackerin</strong></p>
             </div>
@@ -134,7 +134,6 @@
             <!-- Footer -->
             <div class="email-footer">
                 <p>&copy; {{ date('Y') }} Trackerin. All rights reserved.</p>
-                <p>Personalized Learning Tracker dengan dukungan AI.</p>
             </div>
         </div>
     </div>

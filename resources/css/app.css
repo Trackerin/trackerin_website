@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@200..800&display=swap');
 @import 'tailwindcss';
+@import './animations.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +8,48 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Libre Baskerville', Georgia, Cambria, 'Times New Roman', Times, serif;
+
+    /* Custom Color Palette */
+    --color-main-blue: #2F6CF9;
+    --color-hover-blue: #275ACF;
+    --color-white-bg: #ECF0F1;
+    --color-white-pure: #FFFFFF;
+    --color-dark-text: #091632;
+    --color-grey-text: #6B7280;
+    --color-semi-dark: #102453;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+    /* Prevent elastic bounce effect that reveals underlying white background */
+    overscroll-behavior-y: none;
+}
+
+/* Premium Stroke Gradient Card Border (Creative Studio Style) */
+.gradient-border-card {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+
+.gradient-border-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 1.5rem;
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(9, 22, 50, 0.12) 0%, rgba(255, 255, 255, 0.8) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
