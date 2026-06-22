@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard - Trackerin</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/trackerin_logo.svg') }}">
     
     <!-- CSRF Token for Secure AJAX AJAX API calls -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
