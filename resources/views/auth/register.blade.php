@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daftar Akun - Trackerin</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/trackerin_logo.svg') }}">
     <!-- Styles & Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     

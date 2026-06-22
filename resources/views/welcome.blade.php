@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Trackerin - AI-powered Personal Learning Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/trackerin_logo.svg') }}">
 
     <!-- SEO Meta Tags -->
     <meta name="description"
